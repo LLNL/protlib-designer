@@ -6,22 +6,49 @@ Welcome to the Linear Programming for Protein Design repository! This repository
 
 This repository accompanies the paper ["Antibody Library Design by Seeding Linear Programming with Inverse Folding and Protein Language Models"](https://www.biorxiv.org/content/10.1101/2024.11.03.621763v1).
 
+<!-- add the image in /Users/landajuelala1/Code/abag/lp-protein-design/images/method_diagram.pdf -->
+<p align="center">
+<img src="images/method_diagram.png" width="800">
+</p>
+
+
 ## Installation
 
 Create an environment with Python >=3.9 and install the dependencies:
 ```bash
 python -m venv .venv
 source .venv/bin/activate
-pip install -e ".[dev]"
-```
-
-- For developers:
-```bash
-black -S -t py39 lp_protein_design && isort lp_protein_design && flake8 --ignore=E501,E203,W503 lp_protein_design
+pip install -e .
 ```
 
 ## Run the code
 
+To run the code to create a diverse protein library of size 10 from the example data, run the following command:
+
 ```bash
 lpsolve ./example_data/trastuzumab_spm.csv 10
 ```
+
+For more information on the command-line arguments, run:
+
+```bash
+lpsolve --help
+```
+
+## Input data
+
+The key input to the software is a matrix of *in silico* deep mutational scanning data, where each row corresponds to a mutation and each column corresponds to the score computed by a deep learning model. See the example data in the `example_data` directory for an example of the input data format. The structure of the input data is shown below:
+
+| MutationHL | score1 | score2 | ... | scoreN |
+|------------|--------|--------|-----|--------|
+| AH106C     | 0.1    | 0.2    | ... | 0.3    |
+| AH106D     | 0.2    | 0.3    | ... | 0.4    |
+| ...        | ...    | ...    | ... | ...    |
+| YH107A     | 0.3    | 0.4    | ... | 0.5    |
+| ...        | ...    | ...    | ... | ...    |
+
+The `MutationHL` column contains the mutation in the format : `WT_residue` + `chain` + `position_index` + `mutant_residue`. 
+
+The `score1`, `score2`, ..., `scoreN` columns contain the scores computed by the deep learning model for each mutation. 
+
+$$ s_{ij}^{\text{PLM}} =  -\log \left( \frac{p(x_i = a_j | w)}{p(x_i = w_i | w)} \right) =  -\log(p(x_i = a_j | w)) + \log(p(x_i = w_i | w)) $$
