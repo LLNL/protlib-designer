@@ -91,7 +91,7 @@ def ilp(
     debug,
     data_normalization,
 ):
-    """Integer Linear Programming-based Optimization for Antibody Design
+    """Integer Linear Programming-based Optimization for Protein Library 
 
     \b
     Parameters
