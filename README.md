@@ -1,12 +1,11 @@
-# Linear Programming for Protein Library Design
+# `protlib-designer` : Integer Linear Programming for Protein Library Design
 
 ## Introduction
 
-Welcome to the Linear Programming for Protein Library Design repository! This repository contains a Python package that designs diverse protein libraries by seeding linear programming with scores from inverse folding and protein language models. The software takes as input a matrix of *in silico* deep mutational scanning data, where each row corresponds to a mutation and each column corresponds to the score computed by a deep learning model. The software then uses linear programming to select a subset of mutations that maximize the diversity of the library while maintaining a high average score. The software outputs the selected mutations in a CSV file. The software is designed to be used by researchers in the field of protein engineering who want to design diverse protein libraries for directed evolution experiments. The software is open-source and can be freely downloaded and used by anyone.
+Welcome to the `protlib-designer` repository! This repository contains a Python package that designs diverse protein libraries by seeding linear programming with deep mutational scanning data (or any other data that can be represented as a matrix of scores). The software takes as input the score matrix, where each row corresponds to a mutation and each column corresponds to a different source of scores, and outputs a subset of mutations that maximize the diversity of the library while maintaining a high average score. 
 
 This repository accompanies the paper [Antibody Library Design by Seeding Linear Programming with Inverse Folding and Protein Language Models](https://www.biorxiv.org/content/10.1101/2024.11.03.621763v1).
 
-<!-- add the image in /Users/landajuelala1/Code/abag/lp-protein-design/images/method_diagram.pdf -->
 <p align="center">
 <img src="images/method_diagram.png" width="800">
 </p>
@@ -26,13 +25,13 @@ pip install -e .
 To run the code to create a diverse protein library of size 10 from the example data, run the following command:
 
 ```bash
-lpsolve ./example_data/trastuzumab_spm.csv 10
+protlib-designer ./example_data/trastuzumab_spm.csv 10
 ```
 
 For more information on the command-line arguments, run:
 
 ```bash
-lpsolve --help
+protlib-designer --help
 ```
 
 ## Input data
