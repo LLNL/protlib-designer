@@ -20,6 +20,13 @@ source .venv/bin/activate
 pip install -e .
 ```
 
+### Install the development dependencies
+
+If you want a nice development environment, you can install the development dependencies:
+```bash
+pip install -e .[dev]
+```
+
 ## Run the code
 
 To run the code to create a diverse protein library of size 10 from the example data, run the following command:
