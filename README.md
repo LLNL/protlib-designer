@@ -1,5 +1,8 @@
 # `protlib-designer` : Integer Linear Programming for Protein Library Design
 
+![Status](https://img.shields.io/badge/Status-Active-green.svg)
+![Python](https://img.shields.io/badge/Python-3.9-blue.svg)
+
 ## Introduction
 
 Welcome to the `protlib-designer` repository! This repository contains a Python package that designs diverse protein libraries by seeding linear programming with deep mutational scanning data (or any other data that can be represented as a matrix of scores per single-point mutation). The software takes as input the score matrix, where each row corresponds to a mutation and each column corresponds to a different source of scores, and outputs a subset of mutations that maximize the diversity of the library while Pareto-optimizing the scores from the different sources. 
