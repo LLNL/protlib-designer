@@ -119,49 +119,25 @@ def run_protlib_designer(
     logger.info(f"Processors (logical cores): {cpu_count()}")
     logger.info(f"Python Version: {platform.python_version()}")
 
-    # config = (
-    #         ProtlibDesignerConfig.read_config(config) if config else ProtlibDesignerConfig.get_default_config()
-    # )
-
-    (
-        _,
-        nb_iterations,
-        forbidden_aa,
-        max_arom_per_seq,
-        schedule,
-        schedule_param,
-        objective_constraints,
-        objective_constraints_param,
-    ) = format_and_validate_parameters(
+    config = format_and_validate_parameters(
+        output_folder,
         data,
+        min_mut,
+        max_mut,
         nb_iterations,
         forbidden_aa,
         max_arom_per_seq,
+        dissimilarity_tolerance,
+        interleave_mutant_order,
+        force_mutant_order_balance,
         schedule,
         schedule_param,
         objective_constraints,
         objective_constraints_param,
+        weighted_multi_objective,
+        debug,
+        data_normalization
     )
-
-    config = {
-        "output_folder": output_folder,
-        "data": data,
-        "min_mut": min_mut,
-        "max_mut": max_mut,
-        "nb_iterations": nb_iterations,
-        "forbidden_aa": forbidden_aa,
-        "max_arom_per_seq": max_arom_per_seq,
-        "dissimilarity_tolerance": dissimilarity_tolerance,
-        "interleave_mutant_order": interleave_mutant_order,
-        "force_mutant_order_balance": force_mutant_order_balance,
-        "schedule": schedule,
-        "schedule_param": schedule_param,
-        "objective_constraints": objective_constraints,
-        "objective_constraints_param": objective_constraints_param,
-        "weighted_multi_objective": weighted_multi_objective,
-        "debug": debug,
-        "data_normalization": data_normalization,
-    }
 
     data_loader = DataLoader(data)
     data_loader.load_data()
