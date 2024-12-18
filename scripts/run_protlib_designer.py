@@ -37,7 +37,7 @@ CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"])
 @click.option("--weighted-multi-objective", default=False, type=bool)
 @click.option("--debug", default=0, type=int)
 @click.option("--data-normalization", default=False, type=bool)
-def ilp(
+def run_protlib_designer(
     data: str,
     nb_iterations: int,
     min_mut: int,
@@ -194,4 +194,4 @@ def ilp(
 
 
 if __name__ == "__main__":
-    ilp()
+    run_protlib_designer()
