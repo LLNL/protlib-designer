@@ -1,5 +1,3 @@
-import platform
-from multiprocessing import cpu_count
 from pathlib import Path
 
 import click
@@ -9,8 +7,7 @@ from protlib_designer.dataloader import DataLoader
 from protlib_designer.filter.no_filter import NoFilter
 from protlib_designer.generator.ilp_generator import ILPGenerator
 from protlib_designer.solution_manager import SolutionManager
-from protlib_designer.solver.generate_and_remove_solver import \
-    GenerateAndRemoveSolver
+from protlib_designer.solver.generate_and_remove_solver import GenerateAndRemoveSolver
 from protlib_designer.utils import format_and_validate_parameters, write_config
 
 CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"])
@@ -114,10 +111,6 @@ def run_protlib_designer(
         Normalize the data to be between 0 and 1
     """
 
-    logger.info(f"System Type: {platform.platform()}")
-    logger.info(f"Processors (logical cores): {cpu_count()}")
-    logger.info(f"Python Version: {platform.python_version()}")
-
     # Format the input and validate the parameters.
     config = format_and_validate_parameters(
         output_folder,
@@ -136,7 +129,7 @@ def run_protlib_designer(
         objective_constraints_param,
         weighted_multi_objective,
         debug,
-        data_normalization
+        data_normalization,
     )
 
     # Load the data.
@@ -159,7 +152,10 @@ def run_protlib_designer(
 
     # Create the solver.
     generate_and_remove_solver = GenerateAndRemoveSolver(
-        ilp_generator, no_filter, length_of_library=10, maximum_number_of_iterations=50
+        ilp_generator,
+        no_filter,
+        length_of_library=nb_iterations,
+        maximum_number_of_iterations=2 * nb_iterations,
     )
 
     # Run the solver.

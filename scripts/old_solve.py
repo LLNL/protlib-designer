@@ -11,11 +11,14 @@ import pulp
 from numpy.linalg import matrix_rank, svd
 
 from protlib_designer import logger
-from protlib_designer.dataloader import \
-    extract_positions_and_wildtype_amino_from_data
-from protlib_designer.utils import (amino_acids, aromatic_amino_acids,
-                                    format_and_validate_parameters,
-                                    parse_mutation, write_config)
+from protlib_designer.dataloader import extract_positions_and_wildtype_amino_from_data
+from protlib_designer.utils import (
+    amino_acids,
+    aromatic_amino_acids,
+    format_and_validate_parameters,
+    parse_mutation,
+    write_config,
+)
 
 CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"])
 
