@@ -112,7 +112,7 @@ def run_protlib_designer(
     """
 
     # Format the input and validate the parameters.
-    config = format_and_validate_parameters(
+    config, _ = format_and_validate_parameters(
         output_folder,
         data,
         min_mut,

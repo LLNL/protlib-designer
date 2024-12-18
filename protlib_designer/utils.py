@@ -130,7 +130,7 @@ def format_and_validate_parameters(
         "weighted_multi_objective": weighted_multi_objective,
         "debug": debug,
         "data_normalization": data_normalization,
-    }
+    }, data_df
 
 
 def validate_data(df: pd.DataFrame):
