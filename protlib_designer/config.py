@@ -3,9 +3,11 @@ from pydantic import BaseModel
 from yaml import Loader, load
 
 from protlib_designer import logger
-from protlib_designer.utils import (validate_data,
-                                    validate_objective_constraints,
-                                    validate_schedule_param)
+from protlib_designer.utils import (
+    validate_data,
+    validate_objective_constraints,
+    validate_schedule_param,
+)
 
 
 class ProtlibDesignerConfig(BaseModel):
@@ -39,7 +41,7 @@ class ProtlibDesignerConfig(BaseModel):
     @staticmethod
     def read_config(config):
         if isinstance(config, str):
-            with open(config, encoding='utf-8') as f:
+            with open(config, encoding="utf-8") as f:
                 config = load(f, Loader=Loader)
         elif isinstance(config, dict):
             config = config

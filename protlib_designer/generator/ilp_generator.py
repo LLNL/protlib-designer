@@ -8,8 +8,7 @@ from numpy.linalg import matrix_rank, svd
 
 from protlib_designer import logger
 from protlib_designer.generator.generator import Generator
-from protlib_designer.utils import (amino_acids, aromatic_amino_acids,
-                                    parse_mutation)
+from protlib_designer.utils import amino_acids, aromatic_amino_acids, parse_mutation
 
 
 class ILPGenerator(Generator):
