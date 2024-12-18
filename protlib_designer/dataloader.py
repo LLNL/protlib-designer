@@ -101,6 +101,6 @@ class DataLoader:
                 f"Max number of mutations ({config['max_mut']}) is greater than the number of positions ({len(self.positions)}). \
 Setting max_mut to {len(self.positions)}."
             )
-        config["max_mut"] = len(self.positions)
+            config["max_mut"] = len(self.positions)
 
         return config
