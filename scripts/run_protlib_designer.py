@@ -5,7 +5,6 @@ from pathlib import Path
 import click
 
 from protlib_designer import logger
-# from protlib_designer.config import ProtlibDesignerConfig
 from protlib_designer.dataloader import DataLoader
 from protlib_designer.filter.no_filter import NoFilter
 from protlib_designer.generator.ilp_generator import ILPGenerator
@@ -119,6 +118,7 @@ def run_protlib_designer(
     logger.info(f"Processors (logical cores): {cpu_count()}")
     logger.info(f"Python Version: {platform.python_version()}")
 
+    # Format the 
     config = format_and_validate_parameters(
         output_folder,
         data,
