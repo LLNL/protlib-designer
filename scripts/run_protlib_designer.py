@@ -118,7 +118,7 @@ def run_protlib_designer(
     logger.info(f"Processors (logical cores): {cpu_count()}")
     logger.info(f"Python Version: {platform.python_version()}")
 
-    # Format the 
+    # Format the input and validate the parameters.
     config = format_and_validate_parameters(
         output_folder,
         data,
@@ -139,10 +139,12 @@ def run_protlib_designer(
         data_normalization
     )
 
+    # Load the data.
     data_loader = DataLoader(data)
     data_loader.load_data()
     config = data_loader.update_config_with_data(config)
 
+    # Create the output directory.
     output_path = Path(output_folder)
     if not output_path.exists():
         output_path.mkdir(parents=True, exist_ok=True)
