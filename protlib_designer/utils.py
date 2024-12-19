@@ -1,11 +1,10 @@
 import json
-import string
 import sys
 from pathlib import Path
 
 import pandas as pd
 
-from lp_protein_design import logger
+from protlib_designer import logger
 
 amino_acids = [
     "A",
@@ -38,16 +37,45 @@ aromatic_amino_acids = [
 
 
 def format_and_validate_parameters(
+    output_folder,
     data,
+    min_mut,
+    max_mut,
     nb_iterations,
     forbidden_aa,
     max_arom_per_seq,
+    dissimilarity_tolerance,
+    interleave_mutant_order,
+    force_mutant_order_balance,
     schedule,
     schedule_param,
     objective_constraints,
     objective_constraints_param,
+    weighted_multi_objective,
+    debug,
+    data_normalization,
 ):
-    """Format the parameters."""
+    """Format and validate the parameters.
+
+    Parameters
+    ----------
+    data : str
+        The path to the data file.
+    nb_iterations : int
+        The number of iterations to run.
+    forbidden_aa : str
+        The forbidden amino acids.
+    max_arom_per_seq : int
+        The maximum number of aromatic amino acids per sequence.
+    schedule : int
+        The schedule to use.
+    schedule_param : str
+        The scheduling parameters.
+    objective_constraints : str
+        The objective constraints.
+    objective_constraints_param : str
+        The objective constraints parameters.
+    """
     if nb_iterations > 5000:
         logger.warning("Maximum number of iterations is 5000. Setting to 5000.")
         nb_iterations = 5000
@@ -84,16 +112,25 @@ def format_and_validate_parameters(
     data_df = pd.read_csv(data)
     validate_data(data_df)
 
-    return (
-        data_df,
-        nb_iterations,
-        forbidden_aa,
-        max_arom_per_seq,
-        schedule,
-        schedule_param,
-        objective_constraints,
-        objective_constraints_param,
-    )
+    return {
+        "output_folder": output_folder,
+        "data": data,
+        "min_mut": min_mut,
+        "max_mut": max_mut,
+        "nb_iterations": nb_iterations,
+        "forbidden_aa": forbidden_aa,
+        "max_arom_per_seq": max_arom_per_seq,
+        "dissimilarity_tolerance": dissimilarity_tolerance,
+        "interleave_mutant_order": interleave_mutant_order,
+        "force_mutant_order_balance": force_mutant_order_balance,
+        "schedule": schedule,
+        "schedule_param": schedule_param,
+        "objective_constraints": objective_constraints,
+        "objective_constraints_param": objective_constraints_param,
+        "weighted_multi_objective": weighted_multi_objective,
+        "debug": debug,
+        "data_normalization": data_normalization,
+    }, data_df
 
 
 def validate_data(df: pd.DataFrame):
@@ -166,68 +203,6 @@ def validate_objective_constraints(
         exit()
 
 
-def extract_positions_and_wildtype_amino_from_data(df: pd.DataFrame):
-    """Extract the positions at which mutations occur
-    and the wild type amino acid at that position.
-
-    Parameters
-    ----------
-    df : pd.DataFrame
-        The dataframe containing the data.
-    """
-    mutation_full = df["MutationHL"].values.tolist()
-    positions = []  # Positions that have mutations
-    wildtype_position_amino = {}  # Position to wild type amino acid mapping
-    for mutation in mutation_full:
-
-        wildtype_amino, position, _ = parse_mutation(mutation)
-
-        positions.append(position)
-        if (
-            position in wildtype_position_amino
-            and wildtype_position_amino[position] != wildtype_amino
-        ):
-            logger.error(
-                f"Conflicting information: Wild type amino at position {position} \
-                said to be {wildtype_position_amino[position]} and {wildtype_amino}"
-            )
-            exit()
-
-        # Save the wild type amino acid at this position
-        wildtype_position_amino[position] = wildtype_amino
-
-    # Get distinct positions
-    positions = list(set(positions))
-
-    # Order the positions in ascending order
-    # Consider positions like H28 < H100A
-    # positions = sorted(positions)
-    positions_df = pd.DataFrame.from_dict(
-        {
-            i: {
-                "chain": list(position)[0],
-                "pos": int(position[1:].rstrip(string.ascii_uppercase)),
-                "pos_extra": position[1:].lstrip("0123456789"),
-            }
-            for i, position in enumerate(positions)
-        },
-        orient="index",
-    )
-
-    positions_df = positions_df.sort_values(
-        by=["chain", "pos", "pos_extra"],
-        ascending=[True, True, True],
-    )
-
-    # Get the order by merging the strings
-    positions = [
-        f"{row['chain']}{row['pos']}{row['pos_extra']}"
-        for _, row in positions_df.iterrows()
-    ]
-
-    return positions, wildtype_position_amino
-
-
 def parse_mutation(mutation: str):
     """Parse wild-type, position, mutated amino acid information
     from compact mutation notation.
@@ -245,7 +220,14 @@ def parse_mutation(mutation: str):
     return mutation[0], mutation[1:-1], mutation[-1]
 
 
-def extract_mutation_key(mutationbreak):
+def extract_mutation_key(mutationbreak: str):
+    """Extract the mutation key from the mutationbreak string.
+
+    Parameters
+    ----------
+    mutationbreak : str
+        The mutationbreak string.
+    """
     chars = list(mutationbreak)  # Convert string to list of chars
     return f"{chars[1]}_{chars[2]}"
 

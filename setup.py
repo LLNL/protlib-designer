@@ -1,3 +1,3 @@
 from setuptools import setup
 
-setup(entry_points={"console_scripts": ["protlib-designer=lp_protein_design.solve:ilp"]})
+setup(entry_points={"console_scripts": ["protlib-designer=scripts.run_protlib_designer:run_protlib_designer"]})

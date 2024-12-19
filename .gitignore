@@ -1,4 +1,5 @@
-.venv
+.venv*
 *.egg-info
-lp_solution
 .bash_history
+lp_solution*
+.vscode

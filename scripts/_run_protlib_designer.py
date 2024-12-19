@@ -10,11 +10,15 @@ import pandas as pd
 import pulp
 from numpy.linalg import matrix_rank, svd
 
-from lp_protein_design import logger
-from lp_protein_design.utils import (
-    amino_acids, aromatic_amino_acids,
-    extract_positions_and_wildtype_amino_from_data,
-    format_and_validate_parameters, parse_mutation, write_config)
+from protlib_designer import logger
+from protlib_designer.dataloader import extract_positions_and_wildtype_amino_from_data
+from protlib_designer.utils import (
+    amino_acids,
+    aromatic_amino_acids,
+    format_and_validate_parameters,
+    parse_mutation,
+    write_config,
+)
 
 CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"])
 
@@ -121,25 +125,33 @@ def ilp(
     logger.info(f"Processors (logical cores): {cpu_count()}")
     logger.info(f"Python Version: {platform.python_version()}")
 
-    (
-        data_df,
-        nb_iterations,
-        forbidden_aa,
-        max_arom_per_seq,
-        schedule,
-        schedule_param,
-        objective_constraints,
-        objective_constraints_param,
-    ) = format_and_validate_parameters(
+    config, data_df = format_and_validate_parameters(
+        output_folder,
         data,
+        min_mut,
+        max_mut,
         nb_iterations,
         forbidden_aa,
         max_arom_per_seq,
+        dissimilarity_tolerance,
+        interleave_mutant_order,
+        force_mutant_order_balance,
         schedule,
         schedule_param,
         objective_constraints,
         objective_constraints_param,
+        weighted_multi_objective,
+        debug,
+        data_normalization,
     )
+
+    nb_iterations = config["nb_iterations"]
+    forbidden_aa = config["forbidden_aa"]
+    max_arom_per_seq = config["max_arom_per_seq"]
+    schedule = config["schedule"]
+    schedule_param = config["schedule_param"]
+    objective_constraints = config["objective_constraints"]
+    objective_constraints_param = config["objective_constraints_param"]
 
     targets = data_df.columns[1:].values.tolist()
     logger.info(f"Targets: {targets}")
@@ -166,25 +178,6 @@ Setting max_mut to {len(positions)}."
         given_path.mkdir(parents=True, exist_ok=True)
     logger.info(f"Created directory {output_folder}")
 
-    config = {
-        "output_folder": output_folder,
-        "data": data,
-        "min_mut": min_mut,
-        "max_mut": max_mut,
-        "nb_iterations": nb_iterations,
-        "forbidden_aa": forbidden_aa,
-        "max_arom_per_seq": max_arom_per_seq,
-        "dissimilarity_tolerance": dissimilarity_tolerance,
-        "interleave_mutant_order": interleave_mutant_order,
-        "force_mutant_order_balance": force_mutant_order_balance,
-        "schedule": schedule,
-        "schedule_param": schedule_param,
-        "objective_constraints": objective_constraints,
-        "objective_constraints_param": objective_constraints_param,
-        "weighted_multi_objective": weighted_multi_objective,
-        "debug": debug,
-        "data_normalization": data_normalization,
-    }
     write_config(config, given_path)
 
     problem = pulp.LpProblem("GUIDE_Antibody_Optimization", pulp.LpMinimize)
