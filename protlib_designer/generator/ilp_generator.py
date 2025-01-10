@@ -16,13 +16,13 @@ class ILPGenerator(Generator):
         self.data_loader = data_loader
         self.config = config
 
-        self.x_vars = []  # All the x variables
+        self.x_vars = []  # All the x variables.
         self.x_vars_dict = {}
-        self.aromatic_vars = []  # The aromatic variables
+        self.aromatic_vars = []  # The aromatic variables.
         self.aromatic_vars_dict = {}
-        self.forbidden_vars = []  # The forbidden variables
+        self.forbidden_vars = []  # The forbidden variables.
         self.forbidden_vars_dict = {}
-        self.missing_vars = []  # The missing variables
+        self.missing_vars = []  # The missing variables.
         self.missing_vars_dict = {}
         self.zero_enforced_mutations = []
 
@@ -315,7 +315,7 @@ class ILPGenerator(Generator):
 
         if self.weighted_multi_objective:
             self.weights = np.random.random(size=self.A.shape[0])
-            # normalize to add up to 1
+            # Normalize to add up to 1.
             self.weights = self.weights / np.sum(self.weights)
             dict_weights = dict(zip(self.targets, self.weights))
             if self.debug > 0:
@@ -345,7 +345,7 @@ class ILPGenerator(Generator):
         cpu_time = time.time() - cpu_time_start
         self.cpu_times.append(cpu_time)
 
-        # Post processing the solution
+        # Post processing the solution.
         self.many_hot_encoded_solution = [x.value() for x in self.x_vars]
         x_mutations_in_solution = [x for x in self.x_vars if x.value() == 1]
         self.parsed_mutations_in_solution = [
@@ -354,7 +354,7 @@ class ILPGenerator(Generator):
         formatted_mutations_in_solution = ",".join(
             [f"{x[0]}{x[1]}{x[2]}" for x in self.parsed_mutations_in_solution]
         )
-        # Check if the solution is valid
+        # Check if the solution is valid.
         for mutation in self.parsed_mutations_in_solution:
             if mutation in self.zero_enforced_mutations:
                 logger.error(
@@ -378,7 +378,7 @@ class ILPGenerator(Generator):
         cpu_time,
     ):
 
-        # Logging
+        # Logging.
         self.many_hot_encoded_solutions.append(self.many_hot_encoded_solution)
 
         objective_values_all = np.dot(self.A, self.many_hot_encoded_solution)

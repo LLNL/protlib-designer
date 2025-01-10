@@ -58,58 +58,58 @@ def run_protlib_designer(
     Parameters
     ----------
     data : click.Path
-        Path to the sum of single point mutations file
+        The path to the sum of single point mutations file.
     nb_iterations : int
-        Number of iterations
+        The number of iterations.
     min_mut : int
-        Minimum number of mutations
+        The minimum number of mutations.
     max_mut : int
-        Maximum number of mutations
+        The maximum number of mutations.
     output_folder : click.Path
-        Output directory prefix
+        The output directory prefix.
     forbidden_aa : str
-        String of forbidden amino acid mutations at any position seperated by a comma.
-        Pass as a comma seperated list (e.g C,K)
+        The string of forbidden amino acid mutations at any position seperated by a comma.
+        It should be passed as a comma seperated list (e.g C,K).
     max_arom_per_seq : int
-        Maximum number of aromatic residues per sequence.
+        The maximum number of aromatic residues per sequence.
     dissimilarity_tolerance : float
-        dissimilarity_tolerance parameter for diversity
+        The dissimilarity tolerance parameter for diversity.
     interleave_mutant_order : bool
-        Make the method find first 1 mutation, then 2 mutations , ..., then max_mut mutations,
-        then 1 mutation, then 2 mutations, ...
+        It makes the method find first 1 mutation, then 2 mutations , ..., then max_mut mutations,
+        then 1 mutation, then 2 mutations, ... .
     force_mutant_order_balance : bool
-        Force balance of number of mutations if interleave_mutant_order is True
+        If interleave_mutant_order is True, it will force the method to find the same number of mutants per mutation.
     schedule : int
-        Schedule for diversity. This parameter controls how diversity is enforced during the optimization process.
+        This parameter controls how diversity is enforced during the optimization process.
         Options are 0, 1, or 2. The parameter schedule_param 'p0,p1' is used to specify the parameters for the schedule.
-        0 : No schedule
-        1 : Remove the commonest mutation every p0 iterations and remove the commonest position every p1 iterations
+        0 : No schedule.
+        1 : Remove the commonest mutation every p0 iterations and remove the commonest position every p1 iterations.
         2 : Remove the mutation if it appears more than p0 times and remove the position if it appears more than p1
-        times
+        times.
     schedule_param : str
         The interpretation of this parameter depends on the value of the schedule parameter:
-        schedule=0 : No parameters
+        schedule=0 : No parameters.
         schedule=1 : 'p0,p1' where p0 = Number of iterations to remove the commonest mutation and p1 = Number of iterations
-        to remove the commonest position
+        to remove the commonest position.
         schedule=2 : 'p0,p1' where p0 = Number of occurrences of mutation to remove it and p1 = Number of occurrences of
-        position to remove it
+        position to remove it.
     objective_constraints : str
-        Objective constraint. This is a list of objectives to constraint. It can be a list of names, e.g., "ddg1_stability,ddg2_binding".
-        It can also be a list of indices, e.g., "1,2"
+        This is a list of objectives to constraint. It can be a list of names, e.g., "ddg1_stability,ddg2_binding".
+        It can also be a list of indices, e.g., "1,2".
     objective_constraints_param : str
-        Objective constraint parameters. This is a list of parameters for the objective constraints
+       This is a list of values to be considered upper bounds for the objectives in objective_constraints. It can be a list
+       of values, e.g., "0.5,0.5".
     weighted_multi_objective : bool
-        Use a weighted multi-objective formulation.
-        If False, then reduce the multi-objective matrix using SVD and use the rank-1 approximation
-        as the objective matrix
+        Use a weighted multi-objective formulation. If False, then reduce the multi-objective matrix using SVD and use the rank-1 approximation
+        as the objective matrix.
     debug : int
         The code will print debug information based on the value of this parameter.
-        0 : No debug
+        0 : No debug.
         > 0 : Information about the ILP problem constraints is printed. The CPU time for each iteration is saved.
-        > 1 : The ILP problems are saved to disk
-        > 2 : The trace of the ILP solver is printed
+        > 1 : The ILP problems are saved to disk.
+        > 2 : The trace of the ILP solver is printed.
     data_normalization : bool
-        Normalize the data to be between 0 and 1
+        Normalize the data to be between 0 and 1.
     """
 
     # Format the input and validate the parameters.
