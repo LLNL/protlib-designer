@@ -41,6 +41,13 @@ To run the code to create a diverse protein library of size 10 from the example 
 protlib-designer ./example_data/trastuzumab_spm.csv 10
 ```
 
+We provide a rich set of command-line arguments to customize the behavior of `protlib-designer`. For example, the following command runs the software with a custom seed, a custom number of iterations, and a custom number of mutations in the library:
+
+```bash
+protlib-designer ./example_data/trastuzumab_spm.csv 10 --seed 42 --num-iterations 1000 --num-mutations 20
+```
+
+
 For more information on the command-line arguments, run:
 
 ```bash
@@ -68,6 +75,9 @@ Import notes about the input data:
 
     where $w$ is the wild-type sequence, and $p(x_i = a_j | w)$ is the probability of the mutant residue $a_j$ at position $i$ given the wild-type sequence $w$ as estimated by a Protein Language Model (PLM) or an Inverse Folding model (or any other deep learning model). For example, in [Antibody Library Design by Seeding Linear Programming with Inverse Folding and Protein Language Models](https://www.biorxiv.org/content/10.1101/2024.11.03.621763v1), we used the scores computed by the [ProtBert](https://pubmed.ncbi.nlm.nih.gov/34232869/) and [AntiFold](https://arxiv.org/abs/2405.03370) models.
 
+## Contributing
+
+Please read [CONTRIBUTING.md](./CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
 
 ## Citing This Work
 
