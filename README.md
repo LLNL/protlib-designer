@@ -15,7 +15,11 @@ The paper [Antibody Library Design by Seeding Linear Programming with Inverse Fo
 </p>
 
 
-## Installation
+## Getting Started
+
+In this section, we provide instructions on how to install the software and run the code.
+
+### Installation
 
 Create an environment with Python >=3.9 and install the dependencies:
 ```bash
@@ -24,14 +28,12 @@ source .venv/bin/activate
 pip install -e .
 ```
 
-### Install the development dependencies
-
 If you want a nice development environment, you can install the development dependencies:
 ```bash
 pip install -e .[dev]
 ```
 
-## Run the code
+### Run the code
 
 To run the code to create a diverse protein library of size 10 from the example data, run the following command:
 
@@ -45,9 +47,9 @@ For more information on the command-line arguments, run:
 protlib-designer --help
 ```
 
-## Input data
+### Input data
 
-The input to the software is a matrix of per-mutation scores. Typically, the score matrix is defined by *in silico* deep mutational scanning data, where each row corresponds to a mutation and each column corresponds to the score computed by a deep learning model. See the example data in the `example_data` directory for an example of the input data format. The structure of the input data is shown below:
+The input to the software is a matrix of per-mutation scores (the csv file `trastuzumab_spm.csv` in the example above). Typically, the score matrix is defined by *in silico* deep mutational scanning data, where each row corresponds to a mutation and each column corresponds to the score computed by a deep learning model. See the example data in the `example_data` directory for an example of the input data format. The structure of the input data is shown below:
 
 | MutationHL | score-1 | score-2 | ... | score-N |
 |------------|--------|--------|-----|--------|
@@ -84,3 +86,15 @@ If you use this software in your research, please cite the following paper:
 	journal = {bioRxiv}
 }
 ```
+
+## License
+
+`protlib-designer` is distributed under the terms of the MIT license.
+
+All new contributions must be made under the MIT license.
+
+See LICENSE and NOTICE for details.
+
+SPDX-License-Identifier: MIT
+
+LLNL-CODE-2001645
