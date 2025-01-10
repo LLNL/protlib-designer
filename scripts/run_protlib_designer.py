@@ -80,7 +80,8 @@ def run_protlib_designer(
     force_mutant_order_balance : bool
         Force balance of number of mutations if interleave_mutant_order is True
     schedule : int
-        Schedule for diversity 0, 1, or 2.
+        Schedule for diversity. This parameter controls how diversity is enforced during the optimization process.
+        Options are 0, 1, or 2. The parameter schedule_param 'p0,p1' is used to specify the parameters for the schedule.
         0 : No schedule
         1 : Remove the commonest mutation every p0 iterations and remove the commonest position every p1 iterations
         2 : Remove the mutation if it appears more than p0 times and remove the position if it appears more than p1
