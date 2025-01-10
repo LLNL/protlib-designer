@@ -15,9 +15,9 @@ CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"])
 
 @click.command(context_settings=CONTEXT_SETTINGS)
 @click.argument("data", nargs=1, type=click.Path(exists=True), required=True)
-@click.argument("nb_iterations", default=10, nargs=1, type=int)
-@click.option("--min_mut", default=1, nargs=1, type=int)
-@click.option("--max_mut", default=4, nargs=1, type=int)
+@click.argument("nb-iterations", default=10, nargs=1, type=int)
+@click.option("--min-mut", default=1, nargs=1, type=int)
+@click.option("--max-mut", default=4, nargs=1, type=int)
 @click.option(
     "--output-folder", default="lp_solution", nargs=1, type=click.Path(exists=False)
 )
