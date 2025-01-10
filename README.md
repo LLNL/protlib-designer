@@ -89,11 +89,8 @@ If you use this software in your research, please cite the following paper:
 
 ## License
 
-`protlib-designer` is distributed under the terms of the MIT license.
-
-All new contributions must be made under the MIT license.
-
-See LICENSE and NOTICE for details.
+`protlib-designer` is released under an MIT license. For more details, please see the
+[LICENSE](./LICENSE) and [RELEASE](./RELEASE) files. All new contributions must be made under the MIT license.
 
 SPDX-License-Identifier: MIT
 
