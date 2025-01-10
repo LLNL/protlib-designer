@@ -32,6 +32,12 @@ If you want a nice development environment, you can install the development depe
 ```bash
 pip install -e .[dev]
 ```
+which will allow you to run the tests and the linter. You can run the linting with:
+```bash
+black -S -t py39 protlib_designer && flake8 --ignore=E501,E203,W503 protlib_designer
+```
+
+
 
 ### Run the code
 
@@ -41,10 +47,10 @@ To run the code to create a diverse protein library of size 10 from the example 
 protlib-designer ./example_data/trastuzumab_spm.csv 10
 ```
 
-We provide a rich set of command-line arguments to customize the behavior of `protlib-designer`. For example, the following command runs the software with a custom seed, a custom number of iterations, and a custom number of mutations in the library:
+We provide a rich set of command-line arguments to customize the behavior of `protlib-designer`. For example, the following command runs `protlib-designer` with a range of 3 to 5 mutations per sequence, enforcing the interleaving of the mutant order and balancing the mutant order, and using a weighted multi-objective optimization:
 
 ```bash
-protlib-designer ./example_data/trastuzumab_spm.csv 10 --seed 42 --num-iterations 1000 --num-mutations 20
+protlib-designer ./example_data/trastuzumab_spm.csv 10 --min-mut 3 --max-mut 5 --interleave-mutant-order True --force-mutant-order-balance True --weighted-multi-objective True
 ```
 
 
