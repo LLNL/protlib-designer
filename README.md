@@ -51,7 +51,10 @@ protlib-designer ./example_data/trastuzumab_spm.csv 10
 We provide a rich set of command-line arguments to customize the behavior of `protlib-designer`. For example, the following command runs `protlib-designer` with a range of 3 to 5 mutations per sequence, enforcing the interleaving of the mutant order and balancing the mutant order, and using a weighted multi-objective optimization:
 
 ```bash
-protlib-designer ./example_data/trastuzumab_spm.csv 10 --min-mut 3 --max-mut 5 --interleave-mutant-order True --force-mutant-order-balance True --weighted-multi-objective True
+protlib-designer ./example_data/trastuzumab_spm.csv 10 \
+--min-mut 3 --max-mut 5 \
+--interleave-mutant-order True --force-mutant-order-balance True \
+--weighted-multi-objective True
 ```
 
 
