@@ -73,7 +73,7 @@ The input to the software is a matrix of per-mutation scores (the csv file `tras
 | YH107A     | -0.3    | 0.4    | ... | -0.5    |
 | ...        | ...    | ...    | ... | ...    |
 
-Import notes about the input data:
+Important notes about the input data:
 
 • The `MutationHL` column contains the mutation in the format : `WT_residue` + `chain` + `position_index` + `mutant_residue`. For example, `A+H+106+C = AH106C` represents the mutation of the residue at position 106 in chain H from alanine to cysteine.
 
