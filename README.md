@@ -1,4 +1,4 @@
-# `protlib-designer` : Integer Linear Programming for Protein Library Design
+# protlib-designer : Integer Linear Programming for Protein Library Design
 
 ![Status](https://img.shields.io/badge/Status-Active-green.svg)
 ![Python](https://img.shields.io/badge/Python-3.9-blue.svg)
@@ -9,17 +9,7 @@
 
 Welcome to the `protlib-designer` repository! This repository contains a Python package that designs diverse protein libraries by seeding linear programming with deep mutational scanning data (or any other data that can be represented as a matrix of scores per single-point mutation). The software takes as input the score matrix, where each row corresponds to a mutation and each column corresponds to a different source of scores, and outputs a subset of mutations that maximize the diversity of the library while Pareto-optimizing the scores from the different sources. 
 
-The paper [Antibody Library Design by Seeding Linear Programming with Inverse Folding and Protein Language Models](https://www.biorxiv.org/content/10.1101/2024.11.03.621763v1) uses this software to design diverse antibody libraries by seeding linear programming with scores computed by Protein Language Models (PLMs) and Inverse Folding models. 
-
-<!-- <p align="center">
-<img src="images/method_diagram.png" width="800">
-</p> -->
-<!-- Add some figure notes here 
-(a) The input to the method is an antibody-antigen complex and a target antibody sequence. 
-(b) We generate \emph{in silico} deep mutational scanning data using protein language and inverse folding models. 
-(c) The result is fed into a multi-objective linear programming solver. 
-(d) The solver generates a library of antibodies that are co-optimized for the \emph{in silico} scores while satisfying diversity constraints.
--->
+The paper [Antibody Library Design by Seeding Linear Programming with Inverse Folding and Protein Language Models](https://www.biorxiv.org/content/10.1101/2024.11.03.621763v1) uses this software to design diverse antibody libraries by seeding linear programming with scores computed by Protein Language Models (PLMs) and Inverse Folding models.
 
 <figure>
   <img src="images/method_diagram.png" width="800">
