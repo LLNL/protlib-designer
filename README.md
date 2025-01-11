@@ -24,7 +24,12 @@ The paper [Antibody Library Design by Seeding Linear Programming with Inverse Fo
 <figure>
   <img src="images/method_diagram.png" width="800">
   <figcaption>
-    <p class="figure-caption text-center">The method diagram. (a) The input to the method is an antibody-antigen complex and a target antibody sequence. (b) We generate in silico deep mutational scanning data using protein language and inverse folding models. (c) The result is fed into a multi-objective linear programming solver. (d) The solver generates a library of antibodies that are co-optimized for the in silico scores while satisfying diversity constraints.</p>
+    <p class="figure-caption text-center">
+	<em>
+	protlib-designer designs diverse protein libraries by seeding linear programming with deep mutational scanning data.
+	(a) The input to the method is an antibody-antigen complex and a target antibody sequence. (b) We generate in silico deep mutational scanning data using protein language and inverse folding models. (c) The result is fed into a multi-objective linear programming solver. (d) The solver generates a library of antibodies that are co-optimized for the in silico scores while satisfying diversity constraints.
+	</em>
+	</p>
   </figcaption>
 </figure>
 
