@@ -34,7 +34,7 @@ pip install -e .[dev]
 ```
 which will allow you to run the tests and the linter. You can run the linting with:
 ```bash
-black -S -t py39 protlib_designer && flake8 --ignore=E501,E203,W503 protlib_designer
+black -S -t py39 protlib_designer scripts && flake8 --ignore=E501,E203,W503 protlib_designer scripts
 ```
 
 
