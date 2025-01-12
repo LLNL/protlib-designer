@@ -63,8 +63,7 @@ We provide a rich set of command-line arguments to customize the behavior of `pr
 
 ```bash
 protlib-designer ./example_data/trastuzumab_spm.csv 10 \
---min-mut 3 --max-mut 5 \
---interleave-mutant-order True --force-mutant-order-balance True \
+--min-mut 3 --max-mut 5 --interleave-mutant-order True --force-mutant-order-balance True \
 --weighted-multi-objective True
 ```
 
