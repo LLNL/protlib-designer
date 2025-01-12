@@ -1,4 +1,5 @@
-# protlib-designer : Integer Linear Programming for Protein Library Design
+<!-- add iamge /Users/landajuelala1/Code/abag/protlib-designer/images/protlib-designer-logo.png control image size -->
+# <img src="images/protlib-designer-logo.png" width="200"> protlib-designer : Integer Linear Programming for Protein Library Design
 
 ![Status](https://img.shields.io/badge/Status-Active-green.svg)
 ![Python](https://img.shields.io/badge/Python-3.9-blue.svg)
