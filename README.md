@@ -1,4 +1,4 @@
-# <img src="images/protlib-designer-logo-name-blue.png" width="250">
+<img src="images/protlib-designer-logo-name-blue.png" width="250">
 
 ![Status](https://img.shields.io/badge/Status-Active-green.svg)
 ![Python](https://img.shields.io/badge/Python-3.9-blue.svg)
