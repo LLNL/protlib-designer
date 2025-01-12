@@ -1,4 +1,13 @@
-<img src="images/protlib-designer-logo-name-blue.png" width="200">
+<div align="left">
+  <h2>
+    <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="images/protlib-designer-logo-name-dark.png" width="350">
+    <source media="(prefers-color-scheme: light)" srcset="images/protlib-designer-logo-name-light.png" width="350">
+    <img alt="protlib-designer" src="images/protlib-designer-logo-name-light.png" width="350">
+    </picture>
+  </h2>
+</div>
+
 
 ![Status](https://img.shields.io/badge/Status-Active-green.svg)
 ![Python](https://img.shields.io/badge/Python-3.9-blue.svg)
