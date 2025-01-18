@@ -8,7 +8,6 @@
   </h2>
 </div>
 
-
 ![Status](https://img.shields.io/badge/Status-Active-green.svg)
 ![Python](https://img.shields.io/badge/Python-3.9-blue.svg)
 [![Paper](https://img.shields.io/badge/Paper-Download-green.svg)](https://www.biorxiv.org/content/10.1101/2024.11.03.621763v1)
@@ -30,7 +29,6 @@ The paper [Antibody Library Design by Seeding Linear Programming with Inverse Fo
 	</p>
   </figcaption>
 </figure>
-
 
 ## Getting Started
 
@@ -55,8 +53,6 @@ black -S -t py39 protlib_designer scripts
 flake8 --ignore=E501,E203,W503 protlib_designer scripts
 ```
 
-
-
 ### Run the code
 
 To run the code to create a diverse protein library of size 10 from the example data, run the following command:
@@ -72,7 +68,6 @@ protlib-designer ./example_data/trastuzumab_spm.csv 10 \
 --min-mut 3 --max-mut 5 --interleave-mutant-order True --force-mutant-order-balance True \
 --weighted-multi-objective True
 ```
-
 
 For more information on the command-line arguments, run:
 
