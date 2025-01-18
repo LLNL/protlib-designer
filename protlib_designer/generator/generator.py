@@ -1,5 +1,3 @@
-# write a generator abstract class
-
 from abc import ABC, abstractmethod
 
 
