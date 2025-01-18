@@ -180,7 +180,7 @@ Setting max_mut to {len(positions)}."
 
     write_config(config, given_path)
 
-    problem = pulp.LpProblem("GUIDE_Antibody_Optimization", pulp.LpMinimize)
+    problem = pulp.LpProblem("Protein_Library_Optimization", pulp.LpMinimize)
     logger.info("Linear programming problem initialized")
     solver_msg = debug > 2
 
