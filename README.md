@@ -35,7 +35,7 @@ In this section, we provide instructions on how to install the software and run 
 
 ### Installation
 
-Create an environment with Python >=3.9 and install the dependencies:
+Create an environment with Python >=3.7,<3.11 and install the dependencies:
 ```bash
 python -m venv .venv
 source .venv/bin/activate
