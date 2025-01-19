@@ -228,7 +228,7 @@ def extract_mutation_key(mutationbreak: str):
     mutationbreak : str
         The mutationbreak string.
     """
-    chars = list(mutationbreak)  # Convert string to list of chars
+    chars = list(mutationbreak)  # Convert string to list of chars.
     return f"{chars[1]}_{chars[2]}"
 
 
