@@ -102,23 +102,11 @@ where $w$ is the wild-type sequence, and $p(x_i = a_j | w)$ is the probability o
 
 Please read [CONTRIBUTING.md](./CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
 
-## Citing This Work
+## Citation
 
 If you use this software in your research, please cite the following paper:
 
-```latex
-@article {Hayes2024.11.03.621763,
-	author = {Hayes, Conor F. and Magana-Zook, Steven A. and Gon{\c c}alves, Andre and Solak, Ahmet Can and Faissol, Daniel and Landajuela, Mikel},
-	title = {Antibody Library Design by Seeding Linear Programming with Inverse Folding and Protein Language Models},
-	elocation-id = {2024.11.03.621763},
-	year = {2024},
-	doi = {10.1101/2024.11.03.621763},
-	publisher = {Cold Spring Harbor Laboratory},
-	URL = {https://www.biorxiv.org/content/early/2024/11/03/2024.11.03.621763},
-	eprint = {https://www.biorxiv.org/content/early/2024/11/03/2024.11.03.621763.full.pdf},
-	journal = {bioRxiv}
-}
-```
+Hayes, C. F., Magana-Zook, S. A., Gonçalves, A., Solak, A. C., Faissol, D., & Landajuela, M. (2024). *Antibody Library Design by Seeding Linear Programming with Inverse Folding and Protein Language Models*. **bioRxiv**. [https://doi.org/10.1101/2024.11.03.621763](https://doi.org/10.1101/2024.11.03.621763)
 
 ## License
 
