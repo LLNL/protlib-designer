@@ -19,8 +19,8 @@ def extract_positions_and_wildtype_amino_from_data(df: pd.DataFrame):
         The dataframe containing the data.
     """
     mutation_full = df["MutationHL"].values.tolist()
-    positions = []  # Positions that have mutations
-    wildtype_position_amino = {}  # Position to wild type amino acid mapping
+    positions = []  # Positions that have mutations.
+    wildtype_position_amino = {}  # Position to wild type amino acid mapping.
     for mutation in mutation_full:
 
         wildtype_amino, position, _ = parse_mutation(mutation)
@@ -36,14 +36,14 @@ def extract_positions_and_wildtype_amino_from_data(df: pd.DataFrame):
             )
             exit()
 
-        # Save the wild type amino acid at this position
+        # Save the wild type amino acid at this position.
         wildtype_position_amino[position] = wildtype_amino
 
-    # Get distinct positions
+    # Get distinct positions.
     positions = list(set(positions))
 
-    # Order the positions in ascending order
-    # Consider positions like H28 < H100A
+    # Order the positions in ascending order.
+    # Consider positions like H28 < H100A.
     positions_df = pd.DataFrame.from_dict(
         {
             i: {
@@ -61,7 +61,7 @@ def extract_positions_and_wildtype_amino_from_data(df: pd.DataFrame):
         ascending=[True, True, True],
     )
 
-    # Get the order by merging the strings
+    # Get the order by merging the strings.
     positions = [
         f"{row['chain']}{row['pos']}{row['pos_extra']}"
         for _, row in positions_df.iterrows()
@@ -92,7 +92,7 @@ class DataLoader:
         logger.info(f"Detected wild type amino acid: {self.wildtype_position_amino}")
 
     def update_config_with_data(self, config: Dict[str, Any]):
-        # Check that max_mut is less than the number of positions
+        # Check that max_mut is less than the number of positions.
         if (
             config["max_mut"] > len(self.positions)
             and config["interleave_mutant_order"]
