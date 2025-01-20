@@ -84,7 +84,7 @@ protlib-designer --help
 
 The input to the software is a matrix of per-mutation scores (the csv file `trastuzumab_spm.csv` in the example above). Typically, the score matrix is defined by *in silico* deep mutational scanning data, where each row corresponds to a mutation and each column corresponds to the score computed by a deep learning model. See the example data in the `example_data` directory for an example of the input data format. The structure of the input data is shown below:
 
-| MutationHL | score-1 | score-2 | ... | score-N |
+| Mutation | score-1 | score-2 | ... | score-N |
 |------------|--------|--------|-----|--------|
 | AH106C     | -0.1    | 0.2    | ... | 0.3    |
 | AH106D     | 0.2    | -0.3    | ... | -0.4    |
@@ -94,7 +94,7 @@ The input to the software is a matrix of per-mutation scores (the csv file `tras
 
 Important notes about the input data:
 
-• The `MutationHL` column contains the mutation in the format : `WT_residue` + `chain` + `position_index` + `mutant_residue`. For example, `A+H+106+C = AH106C` represents the mutation of the residue at position 106 in chain H from alanine to cysteine.
+• The `Mutation` column contains the mutation in the format : `WT_residue` + `chain` + `position_index` + `mutant_residue`. For example, `A+H+106+C = AH106C` represents the mutation of the residue at position 106 in chain H from alanine to cysteine.
 
 • The `score-1`, `score-2`, ..., `score-N` columns contain the scores computed by the deep learning models for each mutation. Typically, the scores are the negative log-likelihoods ratios of the mutant residue and the wild-type residue, computed by the deep learning model: 
 

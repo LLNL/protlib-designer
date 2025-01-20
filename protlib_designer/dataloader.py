@@ -18,7 +18,7 @@ def extract_positions_and_wildtype_amino_from_data(df: pd.DataFrame):
     df : pd.DataFrame
         The dataframe containing the data.
     """
-    mutation_full = df["MutationHL"].values.tolist()
+    mutation_full = df["Mutation"].values.tolist()
     positions = []  # Positions that have mutations.
     wildtype_position_amino = {}  # Position to wild type amino acid mapping.
     for mutation in mutation_full:
