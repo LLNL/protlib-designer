@@ -339,7 +339,9 @@ class ILPGenerator(Generator):
         status = self.problem.solve(self.solver)
 
         if status != 1:
-            logger.error(f"Error Status: {pulp.LpStatus[status]}")
+            logger.error(
+                f"Error in ILPGenerator when solving the problem. Status: {pulp.LpStatus[status]}"
+            )
             return None
 
         cpu_time = time.time() - cpu_time_start
