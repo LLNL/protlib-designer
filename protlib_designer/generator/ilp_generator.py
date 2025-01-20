@@ -1,5 +1,6 @@
 import time
 from pathlib import Path
+import warnings
 
 import numpy as np
 import pandas as pd
@@ -9,6 +10,9 @@ from numpy.linalg import matrix_rank, svd
 from protlib_designer import logger
 from protlib_designer.generator.generator import Generator
 from protlib_designer.utils import amino_acids, aromatic_amino_acids, parse_mutation
+
+# Ignore UserWarnings from pulp
+warnings.filterwarnings("ignore", category=UserWarning, module="pulp")
 
 
 class ILPGenerator(Generator):
