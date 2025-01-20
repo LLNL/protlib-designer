@@ -68,6 +68,8 @@ protlib-designer ./example_data/trastuzumab_spm.csv 10 \
   --max-mut 5 \
   --interleave-mutant-order True \
   --force-mutant-order-balance True \
+  --schedule 2 \
+  --schedule-param '1,4' \
   --weighted-multi-objective True
 ```
 
