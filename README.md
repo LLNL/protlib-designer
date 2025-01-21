@@ -124,8 +124,7 @@ protlib-plm-scorer \
   --score-type minus_llr \
   --mask \
   --output-file combined_scores.csv \
-&& \
-  protlib-designer combined_scores.csv 10 --weighted-multi-objective True
+&& protlib-designer combined_scores.csv 10 --weighted-multi-objective True
 ```
 
 ## Contributing
