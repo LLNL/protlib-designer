@@ -115,13 +115,17 @@ pip install -e .[plm]
 After installing the dependencies, you can use the scoring functions to compute the scores for the input data. For example, we can compute the scores using `Rostlab/prot_bert` and `facebook/esm2_t6_8M_UR50D` models, and then, call `protlib-designer` to design a diverse protein library of size 10:
 
 ```bash
-protlib-plm-scorer EVQLVESGGGLVQPGGSLRLSCAASGFNIKDTYIHWVRQAPGKGLEWVARIYPTNGYTRYADSVKGRFTISADTSKNTAYLQMNSLRAEDTAVYYCSRWGGDGFYAMDYWGQGTLVTVSS WH99 GH100 GH101 DH102 GH103 FH104 YH105 AH106 MH107 DH108 \
---models Rostlab/prot_bert --models facebook/esm2_t6_8M_UR50D \
---chain-type heavy \
---score-type minus_llr \
---mask \
---output-file combined_scores.csv \
-&& protlib-designer combined_scores.csv 10 --weighted-multi-objective True
+protlib-plm-scorer \
+  EVQLVESGGGLVQPGGSLRLSCAASGFNIKDTYIHWVRQAPGKGLEWVARIYPTNGYTRYADSVKGRFTISADTSKNTAYLQMNSLRAEDTAVYYCSRWGGDGFYAMDYWGQGTLVTVSS \
+  WH99 GH100 GH101 DH102 GH103 FH104 YH105 AH106 MH107 DH108 \
+  --models Rostlab/prot_bert \
+  --models facebook/esm2_t6_8M_UR50D \
+  --chain-type heavy \
+  --score-type minus_llr \
+  --mask \
+  --output-file combined_scores.csv \
+&& \
+  protlib-designer combined_scores.csv 10 --weighted-multi-objective True
 ```
 
 ## Contributing
@@ -132,7 +136,19 @@ Please read [CONTRIBUTING.md](./CONTRIBUTING.md) for details on our code of cond
 
 If you use this software in your research, please cite the following paper:
 
-Hayes, C. F., Magana-Zook, S. A., Gonçalves, A., Solak, A. C., Faissol, D., & Landajuela, M. (2024). *Antibody Library Design by Seeding Linear Programming with Inverse Folding and Protein Language Models*. **bioRxiv**. [https://doi.org/10.1101/2024.11.03.621763](https://doi.org/10.1101/2024.11.03.621763)
+```
+@article{Hayes2024.11.03.621763,
+  author       = {Hayes, Conor F. and Magana-Zook, Steven A. and Gon{\c{c}}alves, Andre and Solak, Ahmet Can and Faissol, Daniel and Landajuela, Mikel},
+  title        = {Antibody Library Design by Seeding Linear Programming with Inverse Folding and Protein Language Models},
+  journal      = {bioRxiv},
+  year         = {2024},
+  elocation-id = {2024.11.03.621763},
+  doi          = {10.1101/2024.11.03.621763},
+  publisher    = {Cold Spring Harbor Laboratory},
+  url          = {https://www.biorxiv.org/content/early/2024/11/03/2024.11.03.621763},
+  eprint       = {https://www.biorxiv.org/content/early/2024/11/03/2024.11.03.621763.full.pdf}
+}
+```
 
 ## License
 
