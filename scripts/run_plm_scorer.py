@@ -31,7 +31,7 @@ def run_plm_scorer(
     output_file,
 ):
     """
-    Compute in silico mutagenesis scores using the Protein Language Model (PLM) Scorer.
+    Compute in silico mutagenesis scores using Protein Language Models (PLM).
 
     \b
     Parameters
