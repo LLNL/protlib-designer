@@ -1,5 +1,7 @@
 import click
 import pandas as pd
+
+from protlib_designer import logger
 from protlib_designer.scorer.plm_scorer import PLMScorer
 
 CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"])
@@ -79,7 +81,7 @@ def run_plm_scorer(
         dataframes.append(df)
 
     if not dataframes:
-        click.echo("No dataframes were generated. Please check your inputs.", err=True)
+        logger.error("No dataframes to combine.")
         return
 
     # Merge the dataframes over the column "Mutation"
@@ -88,7 +90,7 @@ def run_plm_scorer(
         combined_df = df if i == 0 else pd.merge(combined_df, df, on="Mutation")
 
     combined_df.to_csv(output_file, index=False)
-    click.echo(f"Combined scores saved to {output_file}")
+    logger.info(f"Combined scores saved to {output_file}")
 
 
 if __name__ == "__main__":
