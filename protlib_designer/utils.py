@@ -135,20 +135,20 @@ def format_and_validate_parameters(
 
 def validate_data(df: pd.DataFrame):
     """Validate the data file. The data file must have the following columns:
-    MutationHL, Target1, Target2, ..., TargetN
+    Mutation, Target1, Target2, ..., TargetN
 
     Parameters
     ----------
     df : pd.DataFrame
         The dataframe containing the data.
     """
-    if "MutationHL" not in df.columns:
-        logger.error("Data file must have a MutationHL column.")
+    if "Mutation" not in df.columns:
+        logger.error("Data file must have a Mutation column.")
         sys.exit(2)
 
     if len(df.columns) < 2:
         logger.error(
-            "Data file must have at minimum the MutationHL column and at least one Objective/Target."
+            "Data file must have at minimum the Mutation column and at least one Objective/Target."
         )
         sys.exit(3)
 
@@ -228,7 +228,7 @@ def extract_mutation_key(mutationbreak: str):
     mutationbreak : str
         The mutationbreak string.
     """
-    chars = list(mutationbreak)  # Convert string to list of chars
+    chars = list(mutationbreak)  # Convert string to list of chars.
     return f"{chars[1]}_{chars[2]}"
 
 

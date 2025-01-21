@@ -1,5 +1,7 @@
 import time
 
+from protlib_designer import logger
+
 
 class GenerateAndRemoveSolver:
     def __init__(
@@ -24,7 +26,11 @@ class GenerateAndRemoveSolver:
         ):
             self.generator.update_generator_before_generation(iteration=iteration)
             solution_dict = self.generator.generate_one_solution(iteration=iteration)
-            solution = solution_dict.get("solution")
+            try:
+                solution = solution_dict.get("solution")
+            except AttributeError:
+                logger.info(f"No solution found for iteration {iteration}. Exiting.")
+                break
             if self.filter.filter(solution):
                 self.list_of_solution_dicts.append(solution_dict)
                 number_of_solutions += 1

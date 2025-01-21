@@ -27,8 +27,8 @@ class SolutionManager:
         output_path = Path(output_folder)
         if not output_path.exists():
             output_path.mkdir(parents=True, exist_ok=True)
-        # Rename `solution` to `MutationHL` for consistency with other outputs.
-        self.solutions_df.rename(columns={"solution": "MutationHL"}, inplace=True)
+        # Rename `solution` to `Mutation` for consistency with other outputs.
+        self.solutions_df.rename(columns={"solution": "Mutation"}, inplace=True)
         self.solutions_df.to_csv(output_path / "solutions.csv", index=False)
         logger.info(f"Solutions saved to {output_path / 'solutions.csv'}")
 

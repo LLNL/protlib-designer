@@ -1,5 +1,6 @@
 import time
 from pathlib import Path
+import warnings
 
 import numpy as np
 import pandas as pd
@@ -9,6 +10,9 @@ from numpy.linalg import matrix_rank, svd
 from protlib_designer import logger
 from protlib_designer.generator.generator import Generator
 from protlib_designer.utils import amino_acids, aromatic_amino_acids, parse_mutation
+
+# Ignore UserWarnings from pulp
+warnings.filterwarnings("ignore", category=UserWarning, module="pulp")
 
 
 class ILPGenerator(Generator):
@@ -100,15 +104,15 @@ class ILPGenerator(Generator):
                     self.forbidden_vars.append(x_var)
                     self.forbidden_vars_dict[mutation_name] = x_var
                 # Check if row exists in the input dataframe.
-                if mutation_name in data_df["MutationHL"].values:
+                if mutation_name in data_df["Mutation"].values:
                     # Extract the row from the dataframe in a dictionary format.
-                    row = data_df[data_df["MutationHL"] == mutation_name].to_dict(
+                    row = data_df[data_df["Mutation"] == mutation_name].to_dict(
                         "records"
                     )[0]
                     data_df_padded.append(row)
                 else:  # The row does not exist in the input dataframe.
                     # Add 0-vector row for the new mutation.
-                    new_row = {"MutationHL": mutation_name}
+                    new_row = {"Mutation": mutation_name}
                     # Save the position and aa to add X_pos_a = 0 constraint later in the script.
                     zero_enforced_mutations.append((wt, position, aa))
                     self.missing_vars.append(x_var)
@@ -141,13 +145,13 @@ class ILPGenerator(Generator):
             )
             exit()
 
-        # Check that data_df["MutationHL"].values is equivalent (ordered in the same way) as x_vars.
+        # Check that data_df["Mutation"].values is equivalent (ordered in the same way) as x_vars.
         for index, x_var in enumerate(self.x_vars):
             mutation_name = x_var.getName().split("_")[1]
-            if mutation_name != self.data_df["MutationHL"].values[index]:
+            if mutation_name != self.data_df["Mutation"].values[index]:
                 logger.error(
                     f"Error adding missing position-amino acid pairs. Expected {mutation_name}. \
-                    Got {self.data_df['MutationHL'].values[index]}"
+                    Got {self.data_df['Mutation'].values[index]}"
                 )
                 exit()
 
@@ -339,7 +343,9 @@ class ILPGenerator(Generator):
         status = self.problem.solve(self.solver)
 
         if status != 1:
-            logger.error(f"Error Status: {pulp.LpStatus[status]}")
+            logger.error(
+                f"Error in ILPGenerator when solving the problem. Status: {pulp.LpStatus[status]}"
+            )
             return None
 
         cpu_time = time.time() - cpu_time_start

@@ -180,7 +180,7 @@ Setting max_mut to {len(positions)}."
 
     write_config(config, given_path)
 
-    problem = pulp.LpProblem("GUIDE_Antibody_Optimization", pulp.LpMinimize)
+    problem = pulp.LpProblem("Protein_Library_Optimization", pulp.LpMinimize)
     logger.info("Linear programming problem initialized")
     solver_msg = debug > 2
 
@@ -227,16 +227,16 @@ Setting max_mut to {len(positions)}."
                     )
 
             # Check if row exists in the input dataframe
-            if mutation_name in data_df["MutationHL"].values:
+            if mutation_name in data_df["Mutation"].values:
                 # Extract the row from the dataframe in a dictionary format
-                row = data_df[data_df["MutationHL"] == mutation_name].to_dict(
-                    "records"
-                )[0]
+                row = data_df[data_df["Mutation"] == mutation_name].to_dict("records")[
+                    0
+                ]
                 # Append the row to the padded dataframe
                 data_df_padded.append(row)
             else:  # The row does not exist in the input dataframe
                 # Add 0-vector row for the new mutation
-                new_row = {"MutationHL": mutation_name}
+                new_row = {"Mutation": mutation_name}
                 # Save the position and aa to add X_pos_a = 0 constraint later in the script.
                 zero_enforced_mutations.append((wt, position, aa))
                 for curr_target in targets:
@@ -265,13 +265,13 @@ Setting max_mut to {len(positions)}."
         )
         exit()
 
-    # Check that data_df["MutationHL"].values is equivalent (ordered in the same way) as x_vars
+    # Check that data_df["Mutation"].values is equivalent (ordered in the same way) as x_vars
     for index, x_var in enumerate(x_vars):
         mutation_name = x_var.getName().split("_")[1]
-        if mutation_name != data_df["MutationHL"].values[index]:
+        if mutation_name != data_df["Mutation"].values[index]:
             logger.error(
                 f"Error adding missing position-amino acid pairs. Expected {mutation_name}. \
-                Got {data_df['MutationHL'].values[index]}"
+                Got {data_df['Mutation'].values[index]}"
             )
             exit()
 
@@ -620,7 +620,7 @@ Computing the SVD to get the rank-1 approximation of the objective matrix."
     if list_of_solution_dicts:
         df_solutions = pd.DataFrame(list_of_solution_dicts)
 
-        df_solutions.rename(columns={"solution": "MutationHL"}).to_csv(
+        df_solutions.rename(columns={"solution": "Mutation"}).to_csv(
             Path(given_path) / "solutions.csv", index=False
         )
 
