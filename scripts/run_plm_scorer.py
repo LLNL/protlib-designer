@@ -20,7 +20,7 @@ CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"])
 )
 @click.option('--mask/--no-mask', default=True)
 @click.option('--mapping', type=str, default=None)
-@click.option('--output-file', type=str, default='combined_scores.csv')
+@click.option('--output-file', type=str, default='plm_scores.csv')
 def run_plm_scorer(
     sequence,
     positions,
