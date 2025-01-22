@@ -121,10 +121,8 @@ protlib-plm-scorer \
   --models Rostlab/prot_bert \
   --models facebook/esm2_t6_8M_UR50D \
   --chain-type heavy \
-  --score-type minus_llr \
-  --mask \
-  --output-file combined_scores.csv \
-&& protlib-designer combined_scores.csv 10 --weighted-multi-objective True
+  --output-file plm_scores.csv \
+&& protlib-designer plm_scores.csv 10 --weighted-multi-objective True
 ```
 
 ## Contributing
