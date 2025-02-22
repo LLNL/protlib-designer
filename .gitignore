@@ -5,3 +5,4 @@ lp_solution*
 .vscode
 .coverage
 plm_scores.csv
+protlib_designer/_version.py
