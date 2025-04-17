@@ -37,12 +37,11 @@ class IFOLDScorer(Scorer):
         self.model = self.load_model()
 
     def load_model(self):
-        model = ProteinMPNNRunner(
+        return ProteinMPNNRunner(
             seed=self.seed,
             model_name=self.model_name,
             model_weights_path=self.model_path,
         )
-        return model
 
     def prepare_input(self, pdb_path: str, positions: List[str]):
         """Prepare the input for the model.
