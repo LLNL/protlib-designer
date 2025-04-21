@@ -1,9 +1,8 @@
 from dataclasses import dataclass
 
 import torch
-import torch.nn as nn
-from ProteinMPNN.protein_mpnn_utils import tied_featurize, parse_PDB
-from ProteinMPNN.campaign_utils import parse_multiple_chains
+from protlib_designer.scorer.pmpnn.utils import tied_featurize, parse_PDB
+from protlib_designer.scorer.pmpnn.extra_utils import parse_multiple_chains
 
 
 @dataclass
@@ -67,8 +66,9 @@ class Protein:
         return cls(*outputs, device=device, name=protein_data[0]["name"])
 
     @classmethod
-    def from_pdb(cls, 
-        pdb_path: str,         
+    def from_pdb(
+        cls,
+        pdb_path: str,
         device: torch.device | str = "cuda",
         chain_id_dict: dict | None = None,
         fixed_positions_dict: dict | None = None,
@@ -76,7 +76,7 @@ class Protein:
         tied_positions_dict: dict | None = None,
         pssm_dict: dict | None = None,
         bias_by_res_dict: dict | None = None,
-        ca_only: dict | None = None,        
+        ca_only: dict | None = None,
     ):
         pdb_dict_list = parse_PDB(pdb_path)
         name = pdb_dict_list[0]["name"]
@@ -101,6 +101,7 @@ class Protein:
         )
         return cls(*outputs, device=device, name=name)
 
+
 def from_pdb_dir(
     pdb_dir_path: str,
     device: torch.device | str = "cuda",
@@ -124,7 +125,7 @@ def from_pdb_dir(
                 omit_AA_dict=omit_AA_dict,
                 tied_positions_dict=tied_positions_dict,
                 pssm_dict=pssm_dict,
-                bias_by_res_dict=bias_by_res_dict
+                bias_by_res_dict=bias_by_res_dict,
             )
         )
     return proteins

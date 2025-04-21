@@ -2,31 +2,17 @@ import sys
 import json
 import numpy as np
 import torch
-import copy
 import random
 import os.path
 from pathlib import Path
 
-from ProteinMPNN.protein_mpnn_utils import (
-    _scores,
-    _S_to_seq,
-    tied_featurize,
+from protlib_designer.scorer.pmpnn.utils import (
     parse_PDB,
-    parse_fasta,
-)
-from ProteinMPNN.protein_mpnn_utils import (
     StructureDataset,
     StructureDatasetPDB,
     ProteinMPNN,
 )
-from ProteinMPNN.protein import Protein
-from ProteinMPNN.campaign_utils import (
-    ALPHABET,
-    aa_3to1_dict,
-    mutate_sequence,
-    assigned_fixed_chain,
-    make_fixed_positions_dict,
-)
+from protlib_designer.scorer.pmpnn.protein import Protein
 
 
 class ProteinMPNNRunner:
@@ -117,18 +103,6 @@ class ProteinMPNNRunner:
         self.model.to(self.device)
         self.model.load_state_dict(checkpoint["model_state_dict"])
         self.model.eval()
-
-        # self.load_data(
-        #     chain_id_jsonl,
-        #     fixed_positions_jsonl,
-        #     pssm_jsonl,
-        #     omit_AA_jsonl,
-        #     bias_AA_jsonl,
-        #     tied_positions_jsonl,
-        #     bias_by_res_jsonl,
-        #     pdb_path,
-        #     pdb_path_chains,
-        # )
 
     def load_data(
         self,
@@ -354,7 +328,7 @@ class ProteinMPNNRunner:
         fixed_positions_dict: dict | None = None,
         device: torch.device | str = "cuda",
         conditional_probs: bool = True,
-        randn_1: torch.Tensor | None = None
+        randn_1: torch.Tensor | None = None,
     ):
         if type(pdb) is str:
             protein = Protein.from_pdb(
@@ -379,4 +353,3 @@ class ProteinMPNNRunner:
             chain_order = protein.chain_list_list
 
         return log_probs, S, protein.mask, design_mask, chain_order
-
