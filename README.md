@@ -80,7 +80,7 @@ For more information on the command-line arguments, run:
 protlib-designer --help
 ```
 
-### Input data
+## Input data
 
 The input to the software is a matrix of per-mutation scores (the csv file `trastuzumab_spm.csv` in the example above). Typically, the score matrix is defined by *in silico* deep mutational scanning data, where each row corresponds to a mutation and each column corresponds to the score computed by a deep learning model. See the example data in the `example_data` directory for an example of the input data format. The structure of the input data is shown below:
 
