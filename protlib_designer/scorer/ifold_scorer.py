@@ -75,9 +75,9 @@ class IFOLDScorer(Scorer):
         pdb_dict = parse_PDB(pdb_path)
         proteins = []
         for i, chain in enumerate(chains):
-            fixed_chains = assigned_fixed_chain(pdb_dict, design_chain_list=[chain])
+            fixed_chains = assigned_fixed_chain(pdb_dict[0], design_chain_list=[chain])
             fixed_positions = make_fixed_positions_dict(
-                pdb_dict, locs[i], [chain], specify_non_fixed=True
+                pdb_dict[0], [[locs[i]]], [chain], specify_non_fixed=True
             )
             protein = Protein.from_pdb(
                 pdb_path,
