@@ -8,38 +8,38 @@ CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"])
 
 
 @click.command(context_settings=CONTEXT_SETTINGS)
-@click.argument('pdb_path', type=str, required=True)
-@click.argument('positions', type=str, nargs=-1, required=True)
-@click.option('--seed', type=int, default=None, help="Random seed for reproducibility.")
+@click.argument("pdb_path", type=str, required=True)
+@click.argument("positions", type=str, nargs=-1, required=True)
+@click.option("--seed", type=int, default=None, help="Random seed for reproducibility.")
 @click.option(
-    '--model-name',
-    'model_names',
+    "--model-name",
+    "model_name",
     type=str,
-    multiple=True,
-    required=True,
+    # The default should be the name
+    default=None,
     help="Model version names to use.",
 )
 @click.option(
-    '--model-path',
-    'model_paths',
+    "--model-path",
+    "model_path",
     type=str,
-    multiple=True,
     required=True,
     help="Model weight paths corresponding to each model name.",
 )
 @click.option(
-    '--score-type',
-    type=click.Choice(['minus_ll', 'minus_llr']),
-    default='minus_llr',
+    "--score-type",
+    type=click.Choice(["minus_ll", "minus_llr"]),
+    default="minus_llr",
+    help="Type of score to compute.",
 )
 @click.option(
-    '--output-file',
+    "--output-file",
     type=str,
-    default='ifold_scores.csv',
+    default="ifold_scores.csv",
     help="Output CSV file for combined scores.",
 )
 def run_ifold_scorer(
-    pdb_path, positions, seed, model_names, model_paths, score_type, output_file
+    pdb_path, positions, seed, model_name, model_path, score_type, output_file
 ):
     """
     Compute in silico mutagenesis scores using ProteinMPNN via IFOLDScorer.
@@ -62,20 +62,12 @@ def run_ifold_scorer(
     output_file : str
         Path to save the combined CSV of scores.
     """
-    if len(model_names) != len(model_paths):
-        logger.error(
-            "The number of --model-name entries must match the number of --model-path entries."
-        )
-        return
 
-    dataframes = []
-    for name, path in zip(model_names, model_paths):
-        scorer = IFOLDScorer(
-            seed=seed, model_name=name, model_path=path, score_type=score_type
-        )
-        df = scorer.get_scores(pdb_path, list(positions))
-        dataframes.append(df)
-
+    scorer = IFOLDScorer(
+        seed=seed, model_name=model_name, model_path=model_path, score_type=score_type
+    )
+    df = scorer.get_scores(pdb_path, list(positions))
+    dataframes = [df]
     if not dataframes:
         logger.error("No dataframes to combine.")
         return
