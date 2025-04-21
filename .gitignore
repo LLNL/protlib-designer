@@ -1,4 +1,5 @@
 .venv*
+.eggs*
 *.egg-info
 .bash_history
 lp_solution*

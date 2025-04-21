@@ -125,6 +125,16 @@ protlib-plm-scorer \
 && protlib-designer plm_scores.csv 10 --weighted-multi-objective True
 ```
 
+### Compute Input Data using Inverse Folding Models
+
+We also provide a set of scoring functions that can be used to compute the scores for the input data using Inverse Folding models. Specifically, we provide a scoring function that uses [ProteinMPNN](https://www.science.org/doi/10.1126/science.add2187) to compute the scores for the input data. The scoring function is defined in the `protlib_designer/scorer` module. To use this functionality, you need to install additional dependencies:
+
+```bash
+pip install -e .[ifold]
+```
+
+
+
 ## Contributing
 
 Please read [CONTRIBUTING.md](./CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
