@@ -13,7 +13,7 @@ from protlib_designer.scorer.scorer import (
 )
 from protlib_designer.scorer.pmpnn.protein import Protein, from_pdb_dir
 from protlib_designer.scorer.pmpnn.runner import ProteinMPNNRunner
-from protlib.designer.scorer.pmpnn.utils import parse_PDB
+from protlib_designer.scorer.pmpnn.utils import parse_PDB
 from protlib_designer.scorer.pmpnn.extra_utils import (
     ALPHABET,
     assigned_fixed_chain,
