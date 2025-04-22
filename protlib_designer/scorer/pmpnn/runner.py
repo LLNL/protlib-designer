@@ -208,24 +208,9 @@ class ProteinMPNNRunner:
     # TODO Rename this here and in `load_data`
     def _extracted_from_load_data_97(self, pdb_path, pdb_path_chains):
         pdb_dict_list = parse_PDB(pdb_path, ca_only=self.ca_only)
-        result = StructureDatasetPDB(
+        return StructureDatasetPDB(
             pdb_dict_list, truncate=None, max_length=self.max_length
         )
-        # all_chain_list = [
-        #     item[-1:] for item in list(pdb_dict_list[0]) if item[:9] == "seq_chain"
-        # ]  # ['A','B', 'C',...]
-        # designed_chain_list = (
-        #     [str(item) for item in pdb_path_chains.split()]
-        #     if pdb_path_chains
-        #     else all_chain_list
-        # )
-        # fixed_chain_list = [
-        #     letter for letter in all_chain_list if letter not in designed_chain_list
-        # ]
-        # chain_id_dict = {
-        #     pdb_dict_list[0]["name"]: (designed_chain_list, fixed_chain_list)
-        # }
-        return result
 
     def llr_score(
         self,

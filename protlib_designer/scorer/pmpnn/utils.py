@@ -1423,7 +1423,7 @@ class ProteinMPNN(nn.Module):
         mask_fw = mask_1D * (1.0 - mask_attend)
 
         N_batch, N_nodes = X.size(0), X.size(1)
-        log_probs = torch.zeros((N_batch, N_nodes, 21), device=device)
+        # log_probs = torch.zeros((N_batch, N_nodes, 21), device=device)
         all_probs = torch.zeros(
             (N_batch, N_nodes, 21), device=device, dtype=torch.float32
         )
@@ -1648,7 +1648,7 @@ class ProteinMPNN(nn.Module):
         mask_fw = mask_1D * (1.0 - mask_attend)
 
         N_batch, N_nodes = X.size(0), X.size(1)
-        log_probs = torch.zeros((N_batch, N_nodes, 21), device=device)
+        # log_probs = torch.zeros((N_batch, N_nodes, 21), device=device)
         all_probs = torch.zeros(
             (N_batch, N_nodes, 21), device=device, dtype=torch.float32
         )
@@ -1660,7 +1660,7 @@ class ProteinMPNN(nn.Module):
         ]
         constant = torch.tensor(omit_AAs_np, device=device)
         constant_bias = torch.tensor(bias_AAs_np, device=device)
-        omit_AA_mask_flag = omit_AA_mask != None
+        omit_AA_mask_flag = omit_AA_mask is not None
 
         h_EX_encoder = cat_neighbors_nodes(torch.zeros_like(h_S), h_E, E_idx)
         h_EXV_encoder = cat_neighbors_nodes(h_V, h_EX_encoder, E_idx)
@@ -1700,9 +1700,7 @@ class ProteinMPNN(nn.Module):
                     logits += (
                         tied_beta[t] * (self.W_out(h_V_t) / temperature) / len(t_list)
                     )
-            if done_flag:
-                pass
-            else:
+            if not done_flag:
                 bias_by_res_gathered = bias_by_res[:, t, :]  # [B, 21]
                 probs = F.softmax(
                     logits
@@ -1851,7 +1849,7 @@ class ProteinMPNN(nn.Module):
         )
         mask_attend = torch.gather(order_mask_backward, 2, E_idx).unsqueeze(-1)
         mask_1D = mask.view([mask.size(0), mask.size(1), 1, 1])
-        mask_bw = mask_1D * mask_attend
+        # mask_bw = mask_1D * mask_attend
         mask_fw = mask_1D * (1.0 - mask_attend)
 
         h_EXV_encoder_fw = mask_fw * h_EXV_encoder
