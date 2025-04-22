@@ -429,13 +429,13 @@ def tied_featurize(
                 l0 += chain_length
                 c += 1
                 fixed_position_mask = np.ones(chain_length)
-                if fixed_position_dict != None:
+                if fixed_position_dict is not None:
                     fixed_pos_list = fixed_position_dict[b["name"]][letter]
                     if fixed_pos_list:
                         fixed_position_mask[np.array(fixed_pos_list) - 1] = 0.0
                 fixed_position_mask_list.append(fixed_position_mask)
                 omit_AA_mask_temp = np.zeros([chain_length, len(alphabet)], np.int32)
-                if omit_AA_dict != None:
+                if omit_AA_dict is not None:
                     for item in omit_AA_dict[b["name"]][letter]:
                         idx_AA = np.array(item[0]) - 1
                         AA_idx = np.array(
@@ -465,12 +465,12 @@ def tied_featurize(
         letter_list_np = np.array(letter_list)
         tied_pos_list_of_lists = []
         tied_beta = np.ones(L_max)
-        if tied_positions_dict != None:
+        if tied_positions_dict is not None:
             tied_pos_list = tied_positions_dict[b["name"]]
             if tied_pos_list:
-                set_chains_tied = set(
-                    list(itertools.chain(*[list(item) for item in tied_pos_list]))
-                )
+                # set_chains_tied = set(
+                #     list(itertools.chain(*[list(item) for item in tied_pos_list]))
+                # )
                 for tied_item in tied_pos_list:
                     one_list = []
                     for k, v in tied_item.items():
@@ -676,25 +676,15 @@ class StructureDataset:
                 seq = entry["seq"]
                 name = entry["name"]
 
-                # Convert raw coords to np arrays
-                # for key, val in entry['coords'].items():
-                #    entry['coords'][key] = np.asarray(val)
-
-                # Check if in alphabet
-                bad_chars = set([s for s in seq]).difference(alphabet_set)
-                if len(bad_chars) == 0:
-                    if len(entry["seq"]) <= max_length:
-                        if True:
-                            self.data.append(entry)
-                        else:
-                            discard_count["bad_seq_length"] += 1
-                    else:
-                        discard_count["too_long"] += 1
-                else:
+                if bad_chars := set(list(seq)).difference(alphabet_set):
                     if verbose:
                         print(name, bad_chars, entry["seq"])
                     discard_count["bad_chars"] += 1
 
+                elif len(entry["seq"]) <= max_length:
+                    self.data.append(entry)
+                else:
+                    discard_count["too_long"] += 1
                 # Truncate early
                 if truncate is not None and len(self.data) == truncate:
                     return
@@ -733,23 +723,27 @@ class StructureDatasetPDB:
         start = time.time()
         for i, entry in enumerate(pdb_dict_list):
             seq = entry["seq"]
-            name = entry["name"]
+            # name = entry["name"]
 
-            bad_chars = set([s for s in seq]).difference(alphabet_set)
-            if len(bad_chars) == 0:
-                if len(entry["seq"]) <= max_length:
-                    self.data.append(entry)
-                else:
-                    discard_count["too_long"] += 1
-            else:
+            bad_chars = set(list(seq)).difference(alphabet_set)
+            if bad_chars:
                 discard_count["bad_chars"] += 1
 
+            elif len(entry["seq"]) <= max_length:
+                self.data.append(entry)
+            else:
+                discard_count["too_long"] += 1
             # Truncate early
             if truncate is not None and len(self.data) == truncate:
                 return
 
             if verbose and (i + 1) % 1000 == 0:
                 elapsed = time.time() - start
+                print(
+                    "{} entries ({} loaded) in {:.1f} s".format(
+                        len(self.data), i + 1, elapsed
+                    )
+                )
 
             # print('Discarded', discard_count)
 
@@ -1863,5 +1857,4 @@ class ProteinMPNN(nn.Module):
             h_V = layer(h_V, h_EXV_encoder_fw, mask)
 
         logits = self.W_out(h_V)
-        log_probs = F.log_softmax(logits, dim=-1)
-        return log_probs
+        return F.log_softmax(logits, dim=-1)

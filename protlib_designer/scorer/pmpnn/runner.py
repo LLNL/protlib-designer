@@ -54,27 +54,22 @@ class ProteinMPNNRunner:
         if model_weights_path:
             model_folder_path = model_weights_path
             if model_folder_path[-1] != "/":
-                model_folder_path = model_folder_path + "/"
+                model_folder_path = f"{model_folder_path}/"
         else:
             file_path = os.path.realpath(__file__)
             k = file_path.rfind("/")
             if ca_only:
                 print("Using CA-ProteinMPNN!")
-                model_folder_path = file_path[:k] + "/weights" + "/ca_model_weights/"
+                model_folder_path = f"{file_path[:k]}/weights/ca_model_weights/"
                 if use_soluble_model:
                     print("WARNING: CA-SolubleMPNN is not available yet")
                     sys.exit()
+            elif use_soluble_model:
+                print("Using ProteinMPNN trained on soluble proteins only!")
+                model_folder_path = f"{file_path[:k]}/weights/soluble_model_weights/"
             else:
-                if use_soluble_model:
-                    print("Using ProteinMPNN trained on soluble proteins only!")
-                    model_folder_path = (
-                        file_path[:k] + "/weights" + "/soluble_model_weights/"
-                    )
-                else:
-                    model_folder_path = (
-                        file_path[:k] + "/weights" + "/vanilla_model_weights/"
-                    )
-        checkpoint_path = model_folder_path + f"{model_name}.pt"
+                model_folder_path = f"{file_path[:k]}/weights/vanilla_model_weights/"
+        checkpoint_path = f"{model_folder_path}{model_name}.pt"
 
         self.num_batches = num_seq_per_target // batch_size
         self.batch_copies = batch_size
@@ -144,7 +139,7 @@ class ProteinMPNNRunner:
                 json_list = list(json_file)
             pssm_dict = {}
             for json_str in json_list:
-                pssm_dict.update(json.loads(json_str))
+                pssm_dict |= json.loads(json_str)
         elif type(pssm_jsonl) is dict:
             pssm_dict = pssm_jsonl
         else:
@@ -199,34 +194,37 @@ class ProteinMPNNRunner:
             for n, AA in enumerate(self.alphabet):
                 if AA in list(bias_AA_dict.keys()):
                     bias_AAs_np[n] = bias_AA_dict[AA]
-
-        if pdb_path:
-            pdb_dict_list = parse_PDB(pdb_path, ca_only=self.ca_only)
-            dataset_valid = StructureDatasetPDB(
-                pdb_dict_list, truncate=None, max_length=self.max_length
-            )
-            all_chain_list = [
-                item[-1:] for item in list(pdb_dict_list[0]) if item[:9] == "seq_chain"
-            ]  # ['A','B', 'C',...]
-            if pdb_path_chains:
-                designed_chain_list = [str(item) for item in pdb_path_chains.split()]
-            else:
-                designed_chain_list = all_chain_list
-            fixed_chain_list = [
-                letter for letter in all_chain_list if letter not in designed_chain_list
-            ]
-            chain_id_dict = {}
-            chain_id_dict[pdb_dict_list[0]["name"]] = (
-                designed_chain_list,
-                fixed_chain_list,
-            )
-        else:
-            dataset_valid = StructureDataset(
+        return (
+            self._extracted_from_load_data_97(pdb_path, pdb_path_chains)
+            if pdb_path
+            else StructureDataset(
                 jsonl_path,
                 truncate=None,
                 max_length=self.max_length,
             )
-        return dataset_valid
+        )
+
+    # TODO Rename this here and in `load_data`
+    def _extracted_from_load_data_97(self, pdb_path, pdb_path_chains):
+        pdb_dict_list = parse_PDB(pdb_path, ca_only=self.ca_only)
+        result = StructureDatasetPDB(
+            pdb_dict_list, truncate=None, max_length=self.max_length
+        )
+        all_chain_list = [
+            item[-1:] for item in list(pdb_dict_list[0]) if item[:9] == "seq_chain"
+        ]  # ['A','B', 'C',...]
+        designed_chain_list = (
+            [str(item) for item in pdb_path_chains.split()]
+            if pdb_path_chains
+            else all_chain_list
+        )
+        fixed_chain_list = [
+            letter for letter in all_chain_list if letter not in designed_chain_list
+        ]
+        chain_id_dict = {
+            pdb_dict_list[0]["name"]: (designed_chain_list, fixed_chain_list)
+        }
+        return result
 
     def llr_score(
         self,
@@ -261,7 +259,7 @@ class ProteinMPNNRunner:
 
         # for ix, protein in enumerate(designed_proteins):
         llrs = []
-        for ix, protein in enumerate([mutant_protein] * 10):
+        for _ in [mutant_protein] * 10:
             prot = Protein.from_pdb(mutant_protein, self.device, chain_id_dict)
             prot_logps, prot_mask = self.forward(prot, randn=randn)
             prot_logps *= prot_mask
