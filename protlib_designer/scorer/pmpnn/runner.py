@@ -308,7 +308,9 @@ class ProteinMPNNRunner:
             randn_1,
             backbone_only=False,
         )
-        S = protein.sequence_feats[0,]
+        S = protein.sequence_feats[
+            0,
+        ]
         return log_probs, S
 
     def unconditional_probs(self, protein: Protein):
@@ -318,7 +320,9 @@ class ProteinMPNNRunner:
             protein.residue_idx,
             protein.chain_encoding_all,
         )
-        S = protein.sequence_feats[0,]
+        S = protein.sequence_feats[
+            0,
+        ]
         return log_probs, S
 
     def get_probabilities(
@@ -349,7 +353,9 @@ class ProteinMPNNRunner:
                 print(f"Calculating sequence unconditional probabilities for {name}")
                 log_probs, S = self.unconditional_probs(protein)
 
-            design_mask = (protein.chain_M * protein.chain_M_pos * protein.mask)[0,]
+            design_mask = (protein.chain_M * protein.chain_M_pos * protein.mask)[
+                0,
+            ]
             chain_order = protein.chain_list_list
 
         return log_probs, S, protein.mask, design_mask, chain_order
