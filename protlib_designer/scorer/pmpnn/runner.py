@@ -13,6 +13,7 @@ from protlib_designer.scorer.pmpnn.utils import (
     ProteinMPNN,
 )
 from protlib_designer.scorer.pmpnn.protein import Protein
+from protlib_designer import logger
 
 
 class ProteinMPNNRunner:
@@ -210,20 +211,20 @@ class ProteinMPNNRunner:
         result = StructureDatasetPDB(
             pdb_dict_list, truncate=None, max_length=self.max_length
         )
-        all_chain_list = [
-            item[-1:] for item in list(pdb_dict_list[0]) if item[:9] == "seq_chain"
-        ]  # ['A','B', 'C',...]
-        designed_chain_list = (
-            [str(item) for item in pdb_path_chains.split()]
-            if pdb_path_chains
-            else all_chain_list
-        )
-        fixed_chain_list = [
-            letter for letter in all_chain_list if letter not in designed_chain_list
-        ]
-        chain_id_dict = {
-            pdb_dict_list[0]["name"]: (designed_chain_list, fixed_chain_list)
-        }
+        # all_chain_list = [
+        #     item[-1:] for item in list(pdb_dict_list[0]) if item[:9] == "seq_chain"
+        # ]  # ['A','B', 'C',...]
+        # designed_chain_list = (
+        #     [str(item) for item in pdb_path_chains.split()]
+        #     if pdb_path_chains
+        #     else all_chain_list
+        # )
+        # fixed_chain_list = [
+        #     letter for letter in all_chain_list if letter not in designed_chain_list
+        # ]
+        # chain_id_dict = {
+        #     pdb_dict_list[0]["name"]: (designed_chain_list, fixed_chain_list)
+        # }
         return result
 
     def llr_score(
@@ -345,10 +346,12 @@ class ProteinMPNNRunner:
             name = protein.name
 
             if conditional_probs:
-                print(f"Calculating conditional probabilities for {name}")
+                logger.info(f"Calculating conditional probabilities for {name}")
                 log_probs, S = self.conditional_probs(protein, randn_1)
             else:
-                print(f"Calculating sequence unconditional probabilities for {name}")
+                logger.info(
+                    f"Calculating sequence unconditional probabilities for {name}"
+                )
                 log_probs, S = self.unconditional_probs(protein)
 
             design_mask = (protein.chain_M * protein.chain_M_pos * protein.mask)[
