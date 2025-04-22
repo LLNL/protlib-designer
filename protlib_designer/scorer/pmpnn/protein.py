@@ -2,7 +2,8 @@ from dataclasses import dataclass
 
 import torch
 from protlib_designer.scorer.pmpnn.utils import tied_featurize, parse_PDB
-from protlib_designer.scorer.pmpnn.extra_utils import parse_multiple_chains
+
+# from protlib_designer.scorer.pmpnn.extra_utils import parse_multiple_chains
 
 
 @dataclass
@@ -100,30 +101,30 @@ class Protein:
         return cls(*outputs, device=device, name=name)
 
 
-def from_pdb_dir(
-    pdb_dir_path: str,
-    device: torch.device | str = "cuda",
-    fixed_chain_dict: dict | None = None,
-    fixed_positions_dict: dict | None = None,
-    omit_AA_dict: dict | None = None,
-    tied_positions_dict: dict | None = None,
-    pssm_dict: dict | None = None,
-    bias_by_res_dict: dict | None = None,
-    ca_only: dict | None = None,
-):
-    pdb_dict_list = parse_multiple_chains(pdb_dir_path)
-    proteins = []
-    proteins.extend(
-        Protein.get_features(
-            pdb_dict,
-            device=device,
-            chain_id_dict=fixed_chain_dict,
-            fixed_positions_dict=fixed_positions_dict,
-            omit_AA_dict=omit_AA_dict,
-            tied_positions_dict=tied_positions_dict,
-            pssm_dict=pssm_dict,
-            bias_by_res_dict=bias_by_res_dict,
-        )
-        for pdb_dict in pdb_dict_list
-    )
-    return proteins
+# def from_pdb_dir(
+#     pdb_dir_path: str,
+#     device: torch.device | str = "cuda",
+#     fixed_chain_dict: dict | None = None,
+#     fixed_positions_dict: dict | None = None,
+#     omit_AA_dict: dict | None = None,
+#     tied_positions_dict: dict | None = None,
+#     pssm_dict: dict | None = None,
+#     bias_by_res_dict: dict | None = None,
+#     ca_only: dict | None = None,
+# ):
+#     pdb_dict_list = parse_multiple_chains(pdb_dir_path)
+#     proteins = []
+#     proteins.extend(
+#         Protein.get_features(
+#             pdb_dict,
+#             device=device,
+#             chain_id_dict=fixed_chain_dict,
+#             fixed_positions_dict=fixed_positions_dict,
+#             omit_AA_dict=omit_AA_dict,
+#             tied_positions_dict=tied_positions_dict,
+#             pssm_dict=pssm_dict,
+#             bias_by_res_dict=bias_by_res_dict,
+#         )
+#         for pdb_dict in pdb_dict_list
+#     )
+#     return proteins
