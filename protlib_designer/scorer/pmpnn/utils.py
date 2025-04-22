@@ -1031,21 +1031,25 @@ class CA_ProteinFeatures(nn.Module):
 
         # Build relative orientations
         o_1 = F.normalize(u_2 - u_1, dim=-1)
-        O = torch.stack((o_1, n_2, torch.cross(o_1, n_2)), 2)
-        O = O.view(list(O.shape[:2]) + [9])
-        O = F.pad(O, (0, 0, 1, 2), "constant", 0)
-        O_neighbors = gather_nodes(O, E_idx)
+        orientation_matrix = torch.stack((o_1, n_2, torch.cross(o_1, n_2)), 2)
+        orientation_matrix = orientation_matrix.view(
+            list(orientation_matrix.shape[:2]) + [9]
+        )
+        orientation_matrix = F.pad(orientation_matrix, (0, 0, 1, 2), "constant", 0)
+        O_neighbors = gather_nodes(orientation_matrix, E_idx)
         X_neighbors = gather_nodes(X, E_idx)
 
         # Re-view as rotation matrices
-        O = O.view(list(O.shape[:2]) + [3, 3])
+        orientation_matrix = orientation_matrix.view(
+            list(orientation_matrix.shape[:2]) + [3, 3]
+        )
         O_neighbors = O_neighbors.view(list(O_neighbors.shape[:3]) + [3, 3])
 
         # Rotate into local reference frames
         dX = X_neighbors - X.unsqueeze(-2)
-        dU = torch.matmul(O.unsqueeze(2), dX.unsqueeze(-1)).squeeze(-1)
+        dU = torch.matmul(orientation_matrix.unsqueeze(2), dX.unsqueeze(-1)).squeeze(-1)
         dU = F.normalize(dU, dim=-1)
-        R = torch.matmul(O.unsqueeze(2).transpose(-1, -2), O_neighbors)
+        R = torch.matmul(orientation_matrix.unsqueeze(2).transpose(-1, -2), O_neighbors)
         Q = self._quaternions(R)
 
         # Orientation features
@@ -1152,7 +1156,8 @@ class ProteinFeatures(nn.Module):
         self.num_positional_embeddings = num_positional_embeddings
 
         self.embeddings = PositionalEncodings(num_positional_embeddings)
-        node_in, edge_in = 6, num_positional_embeddings + num_rbf * 25
+        # node_in, edge_in = 6, num_positional_embeddings + num_rbf * 25
+        edge_in = num_positional_embeddings + num_rbf * 25
         self.edge_embedding = nn.Linear(edge_in, edge_features, bias=False)
         self.norm_edges = nn.LayerNorm(edge_features)
 
@@ -1162,7 +1167,7 @@ class ProteinFeatures(nn.Module):
         D = mask_2D * torch.sqrt(torch.sum(dX**2, 3) + eps)
         D_max, _ = torch.max(D, -1, keepdim=True)
         D_adjust = D + (1.0 - mask_2D) * D_max
-        sampled_top_k = self.top_k
+        # sampled_top_k = self.top_k
         D_neighbors, E_idx = torch.topk(
             D_adjust, np.minimum(self.top_k, X.shape[1]), dim=-1, largest=False
         )
@@ -1175,8 +1180,7 @@ class ProteinFeatures(nn.Module):
         D_mu = D_mu.view([1, 1, 1, -1])
         D_sigma = (D_max - D_min) / D_count
         D_expand = torch.unsqueeze(D, -1)
-        RBF = torch.exp(-(((D_expand - D_mu) / D_sigma) ** 2))
-        return RBF
+        return torch.exp(-(((D_expand - D_mu) / D_sigma) ** 2))
 
     def _get_rbf(self, A, B, E_idx):
         D_A_B = torch.sqrt(
@@ -1185,8 +1189,7 @@ class ProteinFeatures(nn.Module):
         D_A_B_neighbors = gather_edges(D_A_B[:, :, :, None], E_idx)[
             :, :, :, 0
         ]  # [B,L,K]
-        RBF_A_B = self._rbf(D_A_B_neighbors)
-        return RBF_A_B
+        return self._rbf(D_A_B_neighbors)
 
     def forward(self, X, mask, residue_idx, chain_labels):
         if self.augment_eps > 0:
@@ -1203,8 +1206,7 @@ class ProteinFeatures(nn.Module):
 
         D_neighbors, E_idx = self._dist(Ca, mask)
 
-        RBF_all = []
-        RBF_all.append(self._rbf(D_neighbors))  # Ca-Ca
+        RBF_all = [self._rbf(D_neighbors)]
         RBF_all.append(self._get_rbf(N, N, E_idx))  # N-N
         RBF_all.append(self._get_rbf(C, C, E_idx))  # C-C
         RBF_all.append(self._get_rbf(O, O, E_idx))  # O-O
@@ -1363,8 +1365,7 @@ class ProteinMPNN(nn.Module):
             h_V = layer(h_V, h_ESV, mask)
 
         logits = self.W_out(h_V)
-        log_probs = F.log_softmax(logits, dim=-1)
-        return log_probs
+        return F.log_softmax(logits, dim=-1)
 
     def sample(
         self,
@@ -1565,8 +1566,7 @@ class ProteinMPNN(nn.Module):
             temp1 = self.W_s(S_t)
             h_S.scatter_(1, t[:, None, None].repeat(1, 1, temp1.shape[-1]), temp1)
             S.scatter_(1, t[:, None], S_t)
-        output_dict = {"S": S, "probs": all_probs, "decoding_order": decoding_order}
-        return output_dict
+        return {"S": S, "probs": all_probs, "decoding_order": decoding_order}
 
     def tied_sample(
         self,
