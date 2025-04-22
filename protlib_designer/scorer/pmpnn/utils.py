@@ -11,43 +11,43 @@ import itertools
 
 
 # Not used in the code
-def parse_fasta(filename, limit=-1, omit=None):
-    if omit is None:
-        omit = []
-    header = []
-    sequence = []
-    with open(filename, "r") as lines:
-        for line in lines:
-            line = line.rstrip()
-            if line[0] == ">":
-                if len(header) == limit:
-                    break
-                header.append(line[1:])
-                sequence.append([])
-            else:
-                if omit:
-                    line = [item for item in line if item not in omit]
-                    line = "".join(line)
-                line = "".join(line)
-                sequence[-1].append(line)
-    sequence = ["".join(seq) for seq in sequence]
-    return np.array(header), np.array(sequence)
+# def parse_fasta(filename, limit=-1, omit=None):
+#     if omit is None:
+#         omit = []
+#     header = []
+#     sequence = []
+#     with open(filename, "r") as lines:
+#         for line in lines:
+#             line = line.rstrip()
+#             if line[0] == ">":
+#                 if len(header) == limit:
+#                     break
+#                 header.append(line[1:])
+#                 sequence.append([])
+#             else:
+#                 if omit:
+#                     line = [item for item in line if item not in omit]
+#                     line = "".join(line)
+#                 line = "".join(line)
+#                 sequence[-1].append(line)
+#     sequence = ["".join(seq) for seq in sequence]
+#     return np.array(header), np.array(sequence)
 
 
 # Not used in the code
-def _scores(S, log_probs, mask):
-    """Negative log probabilities"""
-    criterion = torch.nn.NLLLoss(reduction="none")
-    loss = criterion(
-        log_probs.contiguous().view(-1, log_probs.size(-1)), S.contiguous().view(-1)
-    ).view(S.size())
-    return torch.sum(loss * mask, dim=-1) / torch.sum(mask, dim=-1)
+# def _scores(S, log_probs, mask):
+#     """Negative log probabilities"""
+#     criterion = torch.nn.NLLLoss(reduction="none")
+#     loss = criterion(
+#         log_probs.contiguous().view(-1, log_probs.size(-1)), S.contiguous().view(-1)
+#     ).view(S.size())
+#     return torch.sum(loss * mask, dim=-1) / torch.sum(mask, dim=-1)
 
 
 # Not used in the code
-def _S_to_seq(S, mask):
-    alphabet = "ACDEFGHIKLMNPQRSTVWYX"
-    return "".join([alphabet[c] for c, m in zip(S.tolist(), mask.tolist()) if m > 0])
+# def _S_to_seq(S, mask):
+#     alphabet = "ACDEFGHIKLMNPQRSTVWYX"
+#     return "".join([alphabet[c] for c, m in zip(S.tolist(), mask.tolist()) if m > 0])
 
 
 def parse_PDB_biounits(x, atoms=["N", "CA", "C"], chain=None):
@@ -630,28 +630,28 @@ def tied_featurize(
 
 
 # Not used in the code
-def loss_nll(S, log_probs, mask):
-    """Negative log probabilities"""
-    criterion = torch.nn.NLLLoss(reduction="none")
-    loss = criterion(
-        log_probs.contiguous().view(-1, log_probs.size(-1)), S.contiguous().view(-1)
-    ).view(S.size())
-    loss_av = torch.sum(loss * mask) / torch.sum(mask)
-    return loss, loss_av
+# def loss_nll(S, log_probs, mask):
+#     """Negative log probabilities"""
+#     criterion = torch.nn.NLLLoss(reduction="none")
+#     loss = criterion(
+#         log_probs.contiguous().view(-1, log_probs.size(-1)), S.contiguous().view(-1)
+#     ).view(S.size())
+#     loss_av = torch.sum(loss * mask) / torch.sum(mask)
+#     return loss, loss_av
 
 
 # Not used in the code
-def loss_smoothed(S, log_probs, mask, weight=0.1):
-    """Negative log probabilities"""
-    S_onehot = torch.nn.functional.one_hot(S, 21).float()
+# def loss_smoothed(S, log_probs, mask, weight=0.1):
+#     """Negative log probabilities"""
+#     S_onehot = torch.nn.functional.one_hot(S, 21).float()
 
-    # Label smoothing
-    S_onehot = S_onehot + weight / float(S_onehot.size(-1))
-    S_onehot = S_onehot / S_onehot.sum(-1, keepdim=True)
+#     # Label smoothing
+#     S_onehot = S_onehot + weight / float(S_onehot.size(-1))
+#     S_onehot = S_onehot / S_onehot.sum(-1, keepdim=True)
 
-    loss = -(S_onehot * log_probs).sum(-1)
-    loss_av = torch.sum(loss * mask) / torch.sum(mask)
-    return loss, loss_av
+#     loss = -(S_onehot * log_probs).sum(-1)
+#     loss_av = torch.sum(loss * mask) / torch.sum(mask)
+#     return loss, loss_av
 
 
 class StructureDataset:
