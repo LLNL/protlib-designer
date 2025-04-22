@@ -771,15 +771,16 @@ class StructureLoader:
 
         # Cluster into batches of similar sizes
         clusters, batch = [], []
-        batch_max = 0
+        # batch_max = 0
         for ix in sorted_ix:
             size = self.lengths[ix]
             if size * (len(batch) + 1) <= self.batch_size:
                 batch.append(ix)
-                batch_max = size
+                # batch_max = size
             else:
                 clusters.append(batch)
-                batch, batch_max = [], 0
+                batch = []
+                # batch_max = 0
         if len(batch) > 0:
             clusters.append(batch)
         self.clusters = clusters
@@ -984,7 +985,11 @@ class CA_ProteinFeatures(nn.Module):
                 + torch.stack([Rxx - Ryy - Rzz, -Rxx + Ryy - Rzz, -Rxx - Ryy + Rzz], -1)
             )
         )
-        _R = lambda i, j: R[:, :, :, i, j]
+
+        # _R = lambda i, j: R[:, :, :, i, j]
+        def _R(i, j):
+            return R[:, :, :, i, j]
+
         signs = torch.sign(
             torch.stack(
                 [_R(2, 1) - _R(1, 2), _R(0, 2) - _R(2, 0), _R(1, 0) - _R(0, 1)], -1
@@ -1071,8 +1076,7 @@ class CA_ProteinFeatures(nn.Module):
         D_mu = D_mu.view([1, 1, 1, -1])
         D_sigma = (D_max - D_min) / D_count
         D_expand = torch.unsqueeze(D, -1)
-        RBF = torch.exp(-(((D_expand - D_mu) / D_sigma) ** 2))
-        return RBF
+        return torch.exp(-(((D_expand - D_mu) / D_sigma) ** 2))
 
     def _get_rbf(self, A, B, E_idx):
         D_A_B = torch.sqrt(
@@ -1081,8 +1085,7 @@ class CA_ProteinFeatures(nn.Module):
         D_A_B_neighbors = gather_edges(D_A_B[:, :, :, None], E_idx)[
             :, :, :, 0
         ]  # [B,L,K]
-        RBF_A_B = self._rbf(D_A_B_neighbors)
-        return RBF_A_B
+        return self._rbf(D_A_B_neighbors)
 
     def forward(self, Ca, mask, residue_idx, chain_labels):
         """Featurize coordinates as an attributed graph"""
@@ -1099,8 +1102,7 @@ class CA_ProteinFeatures(nn.Module):
 
         V, O_features = self._orientations_coarse(Ca, E_idx)
 
-        RBF_all = []
-        RBF_all.append(self._rbf(D_neighbors))  # Ca_1-Ca_1
+        RBF_all = [self._rbf(D_neighbors)]
         RBF_all.append(self._get_rbf(Ca_0, Ca_0, E_idx))
         RBF_all.append(self._get_rbf(Ca_2, Ca_2, E_idx))
 
