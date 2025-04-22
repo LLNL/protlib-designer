@@ -109,7 +109,7 @@ class IFOLDScorer(Scorer):
             seq_index = posn - 1  # need to do 0 based index
             position_logps = logps[bi][seq_index].numpy()
             wt_aa_id = aas.index(wildtype_aa)
-            wt_logps = logps[bi][wt_aa_id].numpy()
+            wt_logps = logps[bi][seq_index][wt_aa_id].numpy()
             position_scores = list(
                 score_function(position_logps, wt_logps, score_type=self.score_type)
             )
