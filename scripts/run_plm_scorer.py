@@ -11,7 +11,7 @@ CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"])
 @click.argument('sequence', type=str, required=True)
 @click.argument('positions', type=str, required=True, nargs=-1)
 @click.option('--models', 'model_names', type=str, multiple=True, required=True)
-@click.option('--chain-type', type=str, required=True)
+@click.option('--chain-type', type=str, required=False, default="heavy")
 @click.option('--model-paths', 'model_paths', type=str, multiple=True)
 @click.option(
     '--score-type',
