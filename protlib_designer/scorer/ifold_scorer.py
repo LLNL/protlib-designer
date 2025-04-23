@@ -101,7 +101,10 @@ class IFOLDScorer(Scorer):
 
     def forward_pass(self, proteins: List[Protein]):
         log_prob_list = []
-        for protein in proteins:
+        for pos_index, protein in enumerate(proteins):
+            logger.info(
+                f"Calculating conditional probabilities for {protein.name} at position {pos_index + 1} of {len(proteins)}"
+            )
             log_probs, S, mask, design_mask, chain_order = self.model.get_probabilities(
                 protein, conditional_probs=True
             )

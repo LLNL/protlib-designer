@@ -13,7 +13,6 @@ from protlib_designer.scorer.pmpnn.dataset import (
     StructureDataset,
     StructureDatasetPDB,
 )
-from protlib_designer import logger
 
 
 class ProteinMPNNRunner:
@@ -328,17 +327,10 @@ class ProteinMPNNRunner:
         else:
             protein = pdb
         with torch.no_grad():
-            name = protein.name
-
             if conditional_probs:
-                logger.info(f"Calculating conditional probabilities for {name}")
                 log_probs, S = self.conditional_probs(protein, randn_1)
             else:
-                logger.info(
-                    f"Calculating sequence unconditional probabilities for {name}"
-                )
                 log_probs, S = self.unconditional_probs(protein)
-
             design_mask = (protein.chain_M * protein.chain_M_pos * protein.mask)[
                 0,
             ]
