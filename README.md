@@ -121,7 +121,7 @@ After installing the dependencies, you can use the scoring functions to compute 
 ```bash
 protlib-plm-scorer \
   EVQLVESGGGLVQPGGSLRLSCAASGFNIKDTYIHWVRQAPGKGLEWVARIYPTNGYTRYADSVKGRFTISADTSKNTAYLQMNSLRAEDTAVYYCSRWGGDGFYAMDYWGQGTLVTVSS \
-  WH99 GH100 GH101 DH102 GH103 FH104 YH105 AH106 MH107 DH108 \
+  WB99 GB100 GB101 DB102 GB103 FB104 YB105 AB106 MB107 DB108 \
   --models Rostlab/prot_bert \
   --models facebook/esm2_t6_8M_UR50D \
   --chain-type heavy \
