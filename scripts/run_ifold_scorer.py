@@ -62,6 +62,10 @@ def run_ifold_scorer(
         Path to save the combined CSV of scores.
     """
 
+    logger.info("Running IFOLD Scorer...")
+    logger.info(f"PDB Path: {pdb_path}")
+    logger.info(f"Positions: {positions}")
+
     scorer = IFOLDScorer(
         seed=seed, model_name=model_name, model_path=model_path, score_type=score_type
     )
@@ -78,6 +82,8 @@ def run_ifold_scorer(
 
     combined_df.to_csv(output_file, index=False)
     logger.info(f"Combined scores saved to {output_file}")
+
+    logger.info("IFOLD Scorer run completed.")
 
 
 if __name__ == "__main__":

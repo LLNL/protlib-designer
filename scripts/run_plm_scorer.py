@@ -56,6 +56,10 @@ def run_plm_scorer(
         The mapping.
     """
 
+    logger.info("Running PLM Scorer...")
+    logger.info(f"Sequence: {sequence}")
+    logger.info(f"Positions: {positions}")
+
     dataframes = []
 
     for model_name in model_names:
@@ -91,6 +95,8 @@ def run_plm_scorer(
 
     combined_df.to_csv(output_file, index=False)
     logger.info(f"Combined scores saved to {output_file}")
+
+    logger.info("PLM Scorer run completed.")
 
 
 if __name__ == "__main__":
