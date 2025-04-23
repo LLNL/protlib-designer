@@ -104,7 +104,7 @@ s_{ij}^{\text{PLM}} =  -\log \left( \frac{p(x_i = a_j | w)}{p(x_i = w_i | w)} \r
 
 where $w$ is the wild-type sequence, and $p(x_i = a_j | w)$ is the probability of the mutant residue $a_j$ at position $i$ given the wild-type sequence $w$ as estimated by a Protein Language Model (PLM) or an Inverse Folding model (or any other deep learning model). For example, in [Antibody Library Design by Seeding Linear Programming with Inverse Folding and Protein Language Models](https://www.biorxiv.org/content/10.1101/2024.11.03.621763v1), we used the scores computed by the [ProtBert](https://pubmed.ncbi.nlm.nih.gov/34232869/) and [AntiFold](https://arxiv.org/abs/2405.03370) models.
 
-### Compute Input Data using Protein Language Models
+### Computing Input Data using Protein Language Models
 
 We provide a set of scoring functions that can be used to compute the scores for the input data. The scoring functions are defined in the `protlib_designer/scorer` module. To use this functionality, you need to install additional dependencies:
 
@@ -125,19 +125,28 @@ protlib-plm-scorer \
 && protlib-designer plm_scores.csv 10 --weighted-multi-objective True
 ```
 
-### Compute Input Data using Inverse Folding Models
+### Computing Input Data with Inverse Folding Models
 
-We also provide a set of scoring functions that can be used to compute the scores for the input data using Inverse Folding models. Specifically, we provide a scoring function that uses [ProteinMPNN](https://www.science.org/doi/10.1126/science.add2187) to compute the scores for the input data. The scoring function is defined in the `protlib_designer/scorer` module. To use this functionality, you need to install additional dependencies:
+We provide built-in scoring functions to evaluate your input structures using inverse‐folding methods. Currently, we support:
+
+- [**ProteinMPNN**](https://www.science.org/doi/10.1126/science.add2187) (Dauparas _et al._, 2022)
+  A state-of-the-art inverse‐folding model for protein design.  
+
+To enable inverse-folding scoring, install the extra dependencies:
 
 ```bash
 pip install -e .[ifold]
 ```
 
+> **Note:** This will automatically download the default ProteinMPNN model weights.  
+> If you already have the weights locally, skip the download by passing `--model-path` to the scorer (see below).
+
+Following the example in the previous section, you can compute the scores using the inverse-folding model:
+
 ```bash
 protlib-ifold-scorer \
-  /Users/landajuelala1/Code/abag/protlib-designer/example_data/1n8z.pdb \
-  WB99 GB100 GB101 DB102 GB103 FB104 YB105 AB106 MB107 DB108 
-&& protlib-designer ifold_scores.csv 10 --weighted-multi-objective True
+  example_data/1n8z.pdb \
+  WB99 GB100 GB101 DB102 GB103 FB104 YB105 AB106 MB107 DB108 \
 ```
 
 
