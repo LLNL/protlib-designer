@@ -15,7 +15,6 @@ CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"])
     "--model-name",
     "model_name",
     type=str,
-    # The default should be the name
     default=None,
     help="Model version names to use.",
 )
@@ -23,7 +22,7 @@ CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"])
     "--model-path",
     "model_path",
     type=str,
-    required=True,
+    default=None,
     help="Model weight paths corresponding to each model name.",
 )
 @click.option(

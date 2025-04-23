@@ -136,9 +136,7 @@ pip install -e .[ifold]
 ```bash
 protlib-ifold-scorer \
   /Users/landajuelala1/Code/abag/protlib-designer/example_data/1n8z.pdb \
-  WB99 GB100 GB101 DB102 GB103 FB104 YB105 AB106 MB107 DB108 \
-  --model-path /Users/landajuelala1/Code/abag/protlib-designer/.venv3.10/lib/python3.10/site-packages/proteinmpnn/data/vanilla_model_weights/ \
-  --model-name v_48_002 \
+  WB99 GB100 GB101 DB102 GB103 FB104 YB105 AB106 MB107 DB108 
 && protlib-designer ifold_scores.csv 10 --weighted-multi-objective True
 ```
 

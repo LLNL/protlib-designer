@@ -1,10 +1,12 @@
 import pandas as pd
 from typing import List
+from pathlib import Path
 
 from protlib_designer.scorer.scorer import (
     score_function,
     Scorer,
 )
+from protlib_designer import logger
 from protlib_designer.scorer.pmpnn.protein import Protein
 from protlib_designer.scorer.pmpnn.runner import ProteinMPNNRunner
 from protlib_designer.scorer.pmpnn.utils import (
@@ -14,16 +16,26 @@ from protlib_designer.scorer.pmpnn.utils import (
     make_fixed_positions_dict,
 )
 
+import proteinmpnn.data.vanilla_model_weights as vmw
+
 
 class IFOLDScorer(Scorer):
     def __init__(
         self,
         seed: int | None = None,
-        model_name: str = "v_48_002",
-        model_path: str = "/usr/workspace/vaccines/proteinmpnn_weights/vanilla_model_weights/",
+        model_name: str | None = None,
+        model_path: str | None = None,
         score_type: str = "minus_llr",
     ):
         self.seed = seed
+
+        if model_path is None:
+            model_path = f'{Path(vmw.__file__).parent}/'
+            logger.info("ProteinMPNN model weights directory: %s", model_path)
+        if model_name is None:
+            model_name = "v_48_002"
+            logger.info("ProteinMPNN model name: %s", model_name)
+
         self.model_name = model_name
         self.model_path = model_path
         self.score_type = score_type
