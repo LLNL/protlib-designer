@@ -15,7 +15,7 @@
 
 ## Introduction
 
-Welcome to the `protlib-designer` repository! This repository contains a lightweight python library for designing diverse protein libraries by seeding linear programming with deep mutational scanning data (or any other data that can be represented as a matrix of scores per single-point mutation). The software takes as input the score matrix, where each row corresponds to a mutation and each column corresponds to a different source of scores, and outputs a subset of mutations that maximize the diversity of the library while Pareto-optimizing the scores from the different sources.
+Welcome to the `protlib-designer` repository! This repository contains a lightweight python library for designing diverse protein libraries by seeding linear programming with deep mutational scanning data (or any other data that can be represented as a matrix of scores per single-point mutation). The software takes as input the score matrix, where each row corresponds to a mutation and each column corresponds to a different source of scores, and outputs a subset of mutations that **Pareto-minimizes the scores from the different sources while maximizing the diversity of the library**.
 
 The paper [Antibody Library Design by Seeding Linear Programming with Inverse Folding and Protein Language Models](https://www.biorxiv.org/content/10.1101/2024.11.03.621763v1) uses this software to design diverse antibody libraries by seeding linear programming with scores computed by Protein Language Models (PLMs) and Inverse Folding models.
 
@@ -35,7 +35,8 @@ In this section, we provide instructions on how to install the software and run 
 
 ### Installation
 
-Create an environment with Python >=3.7,<3.11 and install the dependencies:
+Create an environment with Python >=3.10,<3.11 and install the dependencies:
+
 ```bash
 python -m venv .venv
 source .venv/bin/activate
@@ -43,10 +44,13 @@ pip install -e .
 ```
 
 If you want a nice development environment, you can install the development dependencies:
+
 ```bash
 pip install -e .[dev]
 ```
+
 which will allow you to run the tests and the linter. You can run the linting with:
+
 ```bash
 black -S -t py39 protlib_designer scripts && \
 flake8 --ignore=E501,E203,W503 protlib_designer scripts
@@ -80,7 +84,7 @@ For more information on the command-line arguments, run:
 protlib-designer --help
 ```
 
-### Input data
+## Input data
 
 The input to the software is a matrix of per-mutation scores (the csv file `trastuzumab_spm.csv` in the example above). Typically, the score matrix is defined by *in silico* deep mutational scanning data, where each row corresponds to a mutation and each column corresponds to the score computed by a deep learning model. See the example data in the `example_data` directory for an example of the input data format. The structure of the input data is shown below:
 
@@ -104,7 +108,7 @@ s_{ij}^{\text{PLM}} =  -\log \left( \frac{p(x_i = a_j | w)}{p(x_i = w_i | w)} \r
 
 where $w$ is the wild-type sequence, and $p(x_i = a_j | w)$ is the probability of the mutant residue $a_j$ at position $i$ given the wild-type sequence $w$ as estimated by a Protein Language Model (PLM) or an Inverse Folding model (or any other deep learning model). For example, in [Antibody Library Design by Seeding Linear Programming with Inverse Folding and Protein Language Models](https://www.biorxiv.org/content/10.1101/2024.11.03.621763v1), we used the scores computed by the [ProtBert](https://pubmed.ncbi.nlm.nih.gov/34232869/) and [AntiFold](https://arxiv.org/abs/2405.03370) models.
 
-### Compute Input Data using Protein Language Models
+### Computing Input Data using Protein Language Models
 
 We provide a set of scoring functions that can be used to compute the scores for the input data. The scoring functions are defined in the `protlib_designer/scorer` module. To use this functionality, you need to install additional dependencies:
 
@@ -117,12 +121,34 @@ After installing the dependencies, you can use the scoring functions to compute 
 ```bash
 protlib-plm-scorer \
   EVQLVESGGGLVQPGGSLRLSCAASGFNIKDTYIHWVRQAPGKGLEWVARIYPTNGYTRYADSVKGRFTISADTSKNTAYLQMNSLRAEDTAVYYCSRWGGDGFYAMDYWGQGTLVTVSS \
-  WH99 GH100 GH101 DH102 GH103 FH104 YH105 AH106 MH107 DH108 \
+  WB99 GB100 GB101 DB102 GB103 FB104 YB105 AB106 MB107 DB108 \
   --models Rostlab/prot_bert \
   --models facebook/esm2_t6_8M_UR50D \
-  --chain-type heavy \
-  --output-file plm_scores.csv \
 && protlib-designer plm_scores.csv 10 --weighted-multi-objective True
+```
+
+### Computing Input Data with Inverse Folding Models
+
+We provide built-in scoring functions to evaluate your input structures using inverse‐folding methods. Currently, we support:
+
+- [**ProteinMPNN**](https://www.science.org/doi/10.1126/science.add2187) (Dauparas _et al._, 2022)
+  A state-of-the-art inverse‐folding model for protein design.  
+
+To enable inverse-folding scoring, install the extra dependencies:
+
+```bash
+pip install -e .[ifold]
+```
+
+> **Note:** This will automatically download the default ProteinMPNN model weights.  
+> If you already have the weights locally, skip the download by passing `--model-path` to the scorer (see below).
+
+Following the example in the previous section, you can compute the scores using the inverse-folding model:
+
+```bash
+protlib-ifold-scorer \
+  example_data/1n8z.pdb \
+  WB99 GB100 GB101 DB102 GB103 FB104 YB105 AB106 MB107 DB108 \
 ```
 
 ## Contributing
@@ -133,7 +159,7 @@ Please read [CONTRIBUTING.md](./CONTRIBUTING.md) for details on our code of cond
 
 If you use this software in your research, please cite the following paper:
 
-```
+```bibtex
 @article{Hayes2024.11.03.621763,
   author       = {Hayes, Conor F. and Magana-Zook, Steven A. and Gon{\c{c}}alves, Andre and Solak, Ahmet Can and Faissol, Daniel and Landajuela, Mikel},
   title        = {Antibody Library Design by Seeding Linear Programming with Inverse Folding and Protein Language Models},

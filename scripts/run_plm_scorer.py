@@ -11,7 +11,7 @@ CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"])
 @click.argument('sequence', type=str, required=True)
 @click.argument('positions', type=str, required=True, nargs=-1)
 @click.option('--models', 'model_names', type=str, multiple=True, required=True)
-@click.option('--chain-type', type=str, required=True)
+@click.option('--chain-type', type=str, required=False, default="heavy")
 @click.option('--model-paths', 'model_paths', type=str, multiple=True)
 @click.option(
     '--score-type',
@@ -56,6 +56,10 @@ def run_plm_scorer(
         The mapping.
     """
 
+    logger.info("Running PLM Scorer...")
+    logger.info(f"Sequence: {sequence}")
+    logger.info(f"Positions: {positions}")
+
     dataframes = []
 
     for model_name in model_names:
@@ -91,6 +95,8 @@ def run_plm_scorer(
 
     combined_df.to_csv(output_file, index=False)
     logger.info(f"Combined scores saved to {output_file}")
+
+    logger.info("PLM Scorer run completed.")
 
 
 if __name__ == "__main__":

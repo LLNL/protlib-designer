@@ -7,6 +7,7 @@ setup(
         "console_scripts": [
             "protlib-designer=scripts.run_protlib_designer:run_protlib_designer",
             "protlib-plm-scorer=scripts.run_plm_scorer:run_plm_scorer",
+            "protlib-ifold-scorer=scripts.run_ifold_scorer:run_ifold_scorer",
         ]
     }
 )
