@@ -36,6 +36,7 @@ In this section, we provide instructions on how to install the software and run 
 ### Installation
 
 Create an environment with Python >=3.10,<3.11 and install the dependencies:
+
 ```bash
 python -m venv .venv
 source .venv/bin/activate
@@ -43,10 +44,13 @@ pip install -e .
 ```
 
 If you want a nice development environment, you can install the development dependencies:
+
 ```bash
 pip install -e .[dev]
 ```
+
 which will allow you to run the tests and the linter. You can run the linting with:
+
 ```bash
 black -S -t py39 protlib_designer scripts && \
 flake8 --ignore=E501,E203,W503 protlib_designer scripts
@@ -149,7 +153,6 @@ protlib-ifold-scorer \
   WB99 GB100 GB101 DB102 GB103 FB104 YB105 AB106 MB107 DB108 \
 ```
 
-
 ## Contributing
 
 Please read [CONTRIBUTING.md](./CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
@@ -158,7 +161,7 @@ Please read [CONTRIBUTING.md](./CONTRIBUTING.md) for details on our code of cond
 
 If you use this software in your research, please cite the following paper:
 
-```
+```bibtex
 @article{Hayes2024.11.03.621763,
   author       = {Hayes, Conor F. and Magana-Zook, Steven A. and Gon{\c{c}}alves, Andre and Solak, Ahmet Can and Faissol, Daniel and Landajuela, Mikel},
   title        = {Antibody Library Design by Seeding Linear Programming with Inverse Folding and Protein Language Models},
