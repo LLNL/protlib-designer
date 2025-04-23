@@ -15,7 +15,7 @@
 
 ## Introduction
 
-Welcome to the `protlib-designer` repository! This repository contains a lightweight python library for designing diverse protein libraries by seeding linear programming with deep mutational scanning data (or any other data that can be represented as a matrix of scores per single-point mutation). The software takes as input the score matrix, where each row corresponds to a mutation and each column corresponds to a different source of scores, and outputs a subset of mutations that maximize the diversity of the library while Pareto-optimizing the scores from the different sources.
+Welcome to the `protlib-designer` repository! This repository contains a lightweight python library for designing diverse protein libraries by seeding linear programming with deep mutational scanning data (or any other data that can be represented as a matrix of scores per single-point mutation). The software takes as input the score matrix, where each row corresponds to a mutation and each column corresponds to a different source of scores, and outputs a subset of mutations that **Pareto-minimizes the scores from the different sources while maximizing the diversity of the library**.
 
 The paper [Antibody Library Design by Seeding Linear Programming with Inverse Folding and Protein Language Models](https://www.biorxiv.org/content/10.1101/2024.11.03.621763v1) uses this software to design diverse antibody libraries by seeding linear programming with scores computed by Protein Language Models (PLMs) and Inverse Folding models.
 
@@ -35,7 +35,7 @@ In this section, we provide instructions on how to install the software and run 
 
 ### Installation
 
-Create an environment with Python >=3.7,<3.11 and install the dependencies:
+Create an environment with Python >=3.10,<3.11 and install the dependencies:
 ```bash
 python -m venv .venv
 source .venv/bin/activate
@@ -133,6 +133,14 @@ We also provide a set of scoring functions that can be used to compute the score
 pip install -e .[ifold]
 ```
 
+```bash
+protlib-ifold-scorer \
+  /Users/landajuelala1/Code/abag/protlib-designer/example_data/1n8z.pdb \
+  WB99 GB100 GB101 DB102 GB103 FB104 YB105 AB106 MB107 DB108 \
+  --model-path /Users/landajuelala1/Code/abag/protlib-designer/.venv3.10/lib/python3.10/site-packages/proteinmpnn/data/vanilla_model_weights/ \
+  --model-name v_48_002 \
+&& protlib-designer ifold_scores.csv 10 --weighted-multi-objective True
+```
 
 
 ## Contributing
