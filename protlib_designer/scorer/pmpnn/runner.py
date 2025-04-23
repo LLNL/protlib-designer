@@ -6,13 +6,13 @@ import random
 import os.path
 from pathlib import Path
 
-from protlib_designer.scorer.pmpnn.utils import (
-    parse_PDB,
+from protlib_designer.scorer.pmpnn.utils import parse_PDB
+from protlib_designer.scorer.pmpnn.model import ProteinMPNN
+from protlib_designer.scorer.pmpnn.protein import Protein
+from protlib_designer.scorer.pmpnn.dataset import (
     StructureDataset,
     StructureDatasetPDB,
-    ProteinMPNN,
 )
-from protlib_designer.scorer.pmpnn.protein import Protein
 from protlib_designer import logger
 
 

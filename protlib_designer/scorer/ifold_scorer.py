@@ -7,8 +7,8 @@ from protlib_designer.scorer.scorer import (
 )
 from protlib_designer.scorer.pmpnn.protein import Protein
 from protlib_designer.scorer.pmpnn.runner import ProteinMPNNRunner
-from protlib_designer.scorer.pmpnn.utils import parse_PDB
-from protlib_designer.scorer.pmpnn.extra_utils import (
+from protlib_designer.scorer.pmpnn.utils import (
+    parse_PDB,
     ALPHABET,
     assigned_fixed_chain,
     make_fixed_positions_dict,
