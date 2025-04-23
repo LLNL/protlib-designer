@@ -1437,7 +1437,7 @@ class ProteinMPNN(nn.Module):
         constant = torch.tensor(omit_AAs_np, device=device)
         constant_bias = torch.tensor(bias_AAs_np, device=device)
         # chain_mask_combined = chain_mask*chain_M_pos
-        omit_AA_mask_flag = omit_AA_mask != None
+        omit_AA_mask_flag = omit_AA_mask is not None
 
         h_EX_encoder = cat_neighbors_nodes(torch.zeros_like(h_S), h_E, E_idx)
         h_EXV_encoder = cat_neighbors_nodes(h_V, h_EX_encoder, E_idx)
