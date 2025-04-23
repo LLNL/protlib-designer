@@ -512,17 +512,24 @@ def tied_featurize(
             bias_by_res_list, 0
         )  # [L,21], 0.0 for places where AA frequencies don't need to be tweaked
 
-        l = len(all_sequence)
+        sequence_length = len(all_sequence)
         x_pad = np.pad(
-            x, [[0, L_max - l], [0, 0], [0, 0]], "constant", constant_values=(np.nan,)
+            x,
+            [[0, L_max - sequence_length], [0, 0], [0, 0]],
+            "constant",
+            constant_values=(np.nan,),
         )
         X[i, :, :, :] = x_pad
 
-        m_pad = np.pad(m, [[0, L_max - l]], "constant", constant_values=(0.0,))
-        m_pos_pad = np.pad(m_pos, [[0, L_max - l]], "constant", constant_values=(0.0,))
+        m_pad = np.pad(
+            m, [[0, L_max - sequence_length]], "constant", constant_values=(0.0,)
+        )
+        m_pos_pad = np.pad(
+            m_pos, [[0, L_max - sequence_length]], "constant", constant_values=(0.0,)
+        )
         omit_AA_mask_pad = np.pad(
             np.concatenate(omit_AA_mask_list, 0),
-            [[0, L_max - l]],
+            [[0, L_max - sequence_length]],
             "constant",
             constant_values=(0.0,),
         )
@@ -533,18 +540,30 @@ def tied_featurize(
         ] = omit_AA_mask_pad
 
         chain_encoding_pad = np.pad(
-            chain_encoding, [[0, L_max - l]], "constant", constant_values=(0.0,)
+            chain_encoding,
+            [[0, L_max - sequence_length]],
+            "constant",
+            constant_values=(0.0,),
         )
         chain_encoding_all[i, :] = chain_encoding_pad
 
         pssm_coef_pad = np.pad(
-            pssm_coef_, [[0, L_max - l]], "constant", constant_values=(0.0,)
+            pssm_coef_,
+            [[0, L_max - sequence_length]],
+            "constant",
+            constant_values=(0.0,),
         )
         pssm_bias_pad = np.pad(
-            pssm_bias_, [[0, L_max - l], [0, 0]], "constant", constant_values=(0.0,)
+            pssm_bias_,
+            [[0, L_max - sequence_length], [0, 0]],
+            "constant",
+            constant_values=(0.0,),
         )
         pssm_log_odds_pad = np.pad(
-            pssm_log_odds_, [[0, L_max - l], [0, 0]], "constant", constant_values=(0.0,)
+            pssm_log_odds_,
+            [[0, L_max - sequence_length], [0, 0]],
+            "constant",
+            constant_values=(0.0,),
         )
 
         pssm_coef_all[i, :] = pssm_coef_pad
@@ -552,13 +571,16 @@ def tied_featurize(
         pssm_log_odds_all[i, :] = pssm_log_odds_pad
 
         bias_by_res_pad = np.pad(
-            bias_by_res_, [[0, L_max - l], [0, 0]], "constant", constant_values=(0.0,)
+            bias_by_res_,
+            [[0, L_max - sequence_length], [0, 0]],
+            "constant",
+            constant_values=(0.0,),
         )
         bias_by_res_all[i, :] = bias_by_res_pad
 
         # Convert to labels
         indices = np.asarray([alphabet.index(a) for a in all_sequence], dtype=np.int32)
-        S[i, :l] = indices
+        S[i, :sequence_length] = indices
         letter_list_list.append(letter_list)
         visible_list_list.append(visible_list)
         masked_list_list.append(masked_list)
@@ -1202,35 +1224,35 @@ class ProteinFeatures(nn.Module):
         Ca = X[:, :, 1, :]
         N = X[:, :, 0, :]
         C = X[:, :, 2, :]
-        O = X[:, :, 3, :]
+        oxygen_coords = X[:, :, 3, :]
 
         D_neighbors, E_idx = self._dist(Ca, mask)
 
         RBF_all = [self._rbf(D_neighbors)]
         RBF_all.append(self._get_rbf(N, N, E_idx))  # N-N
         RBF_all.append(self._get_rbf(C, C, E_idx))  # C-C
-        RBF_all.append(self._get_rbf(O, O, E_idx))  # O-O
+        RBF_all.append(self._get_rbf(oxygen_coords, oxygen_coords, E_idx))  # O-O
         RBF_all.append(self._get_rbf(Cb, Cb, E_idx))  # Cb-Cb
         RBF_all.append(self._get_rbf(Ca, N, E_idx))  # Ca-N
         RBF_all.append(self._get_rbf(Ca, C, E_idx))  # Ca-C
-        RBF_all.append(self._get_rbf(Ca, O, E_idx))  # Ca-O
+        RBF_all.append(self._get_rbf(Ca, oxygen_coords, E_idx))  # Ca-O
         RBF_all.append(self._get_rbf(Ca, Cb, E_idx))  # Ca-Cb
         RBF_all.append(self._get_rbf(N, C, E_idx))  # N-C
-        RBF_all.append(self._get_rbf(N, O, E_idx))  # N-O
+        RBF_all.append(self._get_rbf(N, oxygen_coords, E_idx))  # N-O
         RBF_all.append(self._get_rbf(N, Cb, E_idx))  # N-Cb
         RBF_all.append(self._get_rbf(Cb, C, E_idx))  # Cb-C
-        RBF_all.append(self._get_rbf(Cb, O, E_idx))  # Cb-O
-        RBF_all.append(self._get_rbf(O, C, E_idx))  # O-C
+        RBF_all.append(self._get_rbf(Cb, oxygen_coords, E_idx))  # Cb-O
+        RBF_all.append(self._get_rbf(oxygen_coords, C, E_idx))  # O-C
         RBF_all.append(self._get_rbf(N, Ca, E_idx))  # N-Ca
         RBF_all.append(self._get_rbf(C, Ca, E_idx))  # C-Ca
-        RBF_all.append(self._get_rbf(O, Ca, E_idx))  # O-Ca
+        RBF_all.append(self._get_rbf(oxygen_coords, Ca, E_idx))  # O-Ca
         RBF_all.append(self._get_rbf(Cb, Ca, E_idx))  # Cb-Ca
         RBF_all.append(self._get_rbf(C, N, E_idx))  # C-N
-        RBF_all.append(self._get_rbf(O, N, E_idx))  # O-N
+        RBF_all.append(self._get_rbf(oxygen_coords, N, E_idx))  # O-N
         RBF_all.append(self._get_rbf(Cb, N, E_idx))  # Cb-N
         RBF_all.append(self._get_rbf(C, Cb, E_idx))  # C-Cb
-        RBF_all.append(self._get_rbf(O, Cb, E_idx))  # O-Cb
-        RBF_all.append(self._get_rbf(C, O, E_idx))  # C-O
+        RBF_all.append(self._get_rbf(oxygen_coords, Cb, E_idx))  # O-Cb
+        RBF_all.append(self._get_rbf(C, oxygen_coords, E_idx))  # C-O
         RBF_all = torch.cat(tuple(RBF_all), dim=-1)
 
         offset = residue_idx[:, :, None] - residue_idx[:, None, :]
@@ -1472,13 +1494,15 @@ class ProteinMPNN(nn.Module):
                     ),
                 )
                 mask_t = torch.gather(mask, 1, t[:, None])
-                for l, layer in enumerate(self.decoder_layers):
+                for layer_index, layer in enumerate(self.decoder_layers):
                     # Updated relational features for future states
-                    h_ESV_decoder_t = cat_neighbors_nodes(h_V_stack[l], h_ES_t, E_idx_t)
+                    h_ESV_decoder_t = cat_neighbors_nodes(
+                        h_V_stack[layer_index], h_ES_t, E_idx_t
+                    )
                     h_V_t = torch.gather(
-                        h_V_stack[l],
+                        h_V_stack[layer_index],
                         1,
-                        t[:, None, None].repeat(1, 1, h_V_stack[l].shape[-1]),
+                        t[:, None, None].repeat(1, 1, h_V_stack[layer_index].shape[-1]),
                     )
                     h_ESV_t = (
                         torch.gather(
@@ -1491,7 +1515,7 @@ class ProteinMPNN(nn.Module):
                         * h_ESV_decoder_t
                         + h_EXV_encoder_t
                     )
-                    h_V_stack[l + 1].scatter_(
+                    h_V_stack[layer_index + 1].scatter_(
                         1,
                         t[:, None, None].repeat(1, 1, h_V.shape[-1]),
                         layer(h_V_t, h_ESV_t, mask_V=mask_t),
@@ -1683,16 +1707,16 @@ class ProteinMPNN(nn.Module):
                     h_ES_t = cat_neighbors_nodes(h_S, h_E_t, E_idx_t)
                     h_EXV_encoder_t = h_EXV_encoder_fw[:, t : t + 1, :, :]
                     mask_t = mask[:, t : t + 1]
-                    for l, layer in enumerate(self.decoder_layers):
+                    for layer_index, layer in enumerate(self.decoder_layers):
                         h_ESV_decoder_t = cat_neighbors_nodes(
-                            h_V_stack[l], h_ES_t, E_idx_t
+                            h_V_stack[layer_index], h_ES_t, E_idx_t
                         )
-                        h_V_t = h_V_stack[l][:, t : t + 1, :]
+                        h_V_t = h_V_stack[layer_index][:, t : t + 1, :]
                         h_ESV_t = (
                             mask_bw[:, t : t + 1, :, :] * h_ESV_decoder_t
                             + h_EXV_encoder_t
                         )
-                        h_V_stack[l + 1][:, t, :] = layer(
+                        h_V_stack[layer_index + 1][:, t, :] = layer(
                             h_V_t, h_ESV_t, mask_V=mask_t
                         ).squeeze(1)
                     h_V_t = h_V_stack[-1][:, t, :]
