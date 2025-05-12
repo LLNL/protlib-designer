@@ -9,7 +9,7 @@
 </div>
 
 ![Status](https://img.shields.io/badge/Status-Active-green.svg)
-![Python](https://img.shields.io/badge/Python-3.9-blue.svg)
+![Python](https://img.shields.io/badge/Python-3.10-blue.svg)
 [![Paper](https://img.shields.io/badge/Paper-Download-green.svg)](https://www.biorxiv.org/content/10.1101/2024.11.03.621763v1)
 ![CI](https://github.com/LLNL/protlib-designer/actions/workflows/ci.yml/badge.svg)
 
