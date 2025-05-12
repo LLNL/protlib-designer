@@ -35,7 +35,7 @@ In this section, we provide instructions on how to install the software and run 
 
 ### Installation
 
-You can `pip` install the package from PyPI:
+You can `pip` install the package from [PyPI](https://pypi.org/project/protlib-designer/):
 
 ```bash
 pip install protlib-designer
