@@ -3,6 +3,7 @@
 *.egg-info
 .bash_history
 lp_solution*
+dist
 .vscode
 .coverage
 plm_scores.csv
