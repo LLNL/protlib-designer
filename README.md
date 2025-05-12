@@ -20,7 +20,7 @@ Welcome to the `protlib-designer` repository! This repository contains a lightwe
 The paper [Antibody Library Design by Seeding Linear Programming with Inverse Folding and Protein Language Models](https://www.biorxiv.org/content/10.1101/2024.11.03.621763v1) uses this software to design diverse antibody libraries by seeding linear programming with scores computed by Protein Language Models (PLMs) and Inverse Folding models.
 
 <figure>
-<img src="images/method_diagram.png" width="800">
+<img src="https://raw.githubusercontent.com/LLNL/protlib-designer/main/images/method_diagram.png" alt="protlib-designer method diagram" width="100%">
 <figcaption>
 <p class="figure-caption text-center">
 <em> protlib-designer designs diverse protein libraries by seeding linear programming with deep mutational scanning data. (a) The input to the method is target protein sequence and, if available, a structure of the protein or protein complex (in this case, the antibody trastuzumab in complex with the HER2 receptor). (b) We generate in silico deep mutational scanning data using protein language and inverse folding models. (c) The result is fed into a multi-objective linear programming solver. (d) The solver generates a library of antibodies that are co-optimized for the in silico scores while satisfying diversity constraints. 
