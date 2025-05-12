@@ -35,7 +35,16 @@ In this section, we provide instructions on how to install the software and run 
 
 ### Installation
 
-Create an environment with Python >=3.10,<3.11 and install the dependencies:
+You can `pip` install the package from PyPI:
+
+```bash
+pip install protlib-designer
+```
+
+> **Note:** You can install all additional dependencies by running `pip install protlib-designer[all]`. This will install all the dependencies for the scoring functions, including the inverse folding and protein language model dependencies.
+
+Alternatively, you can clone the repository and install the package from source. First, clone the repository and create an environment with Python >=3.10,<3.11. Then,
+you can do:
 
 ```bash
 python -m venv .venv
@@ -131,7 +140,7 @@ protlib-plm-scorer \
 
 We provide built-in scoring functions to evaluate your input structures using inverse‐folding methods. Currently, we support:
 
-- *Robust deep learning–based protein sequence design using ProteinMPNN* (Dauparas et al. 2022) - [Paper](https://www.science.org/doi/abs/10.1126/science.add2187) - We adopt some of the open source code from [ProteinMPNN](https://github.com/dauparas/ProteinMPNN)
+- *Robust deep learning–based protein sequence design using ProteinMPNN* (Dauparas et al. 2022) - [Paper](https://www.science.org/doi/abs/10.1126/science.add2187) - We adopt some of the open source code from [ProteinMPNN](https://github.com/dauparas/ProteinMPNN).
 
 To enable inverse-folding scoring, install the extra dependencies:
 
@@ -139,8 +148,7 @@ To enable inverse-folding scoring, install the extra dependencies:
 pip install -e .[ifold]
 ```
 
-> **Note:** This will automatically download the default ProteinMPNN model weights.  
-> If you already have the weights locally, skip the download by passing `--model-path` to the scorer (see below).
+> **Note:** This will automatically download the default ProteinMPNN model weights. If you already have the weights locally, skip the download by passing `--model-path` to the scorer (see below).
 
 Following the example in the previous section, you can compute the scores using the inverse-folding model:
 
