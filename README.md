@@ -132,8 +132,13 @@ protlib-plm-scorer \
   EVQLVESGGGLVQPGGSLRLSCAASGFNIKDTYIHWVRQAPGKGLEWVARIYPTNGYTRYADSVKGRFTISADTSKNTAYLQMNSLRAEDTAVYYCSRWGGDGFYAMDYWGQGTLVTVSS \
   WB99 GB100 GB101 DB102 GB103 FB104 YB105 AB106 MB107 DB108 \
   --models Rostlab/prot_bert \
-  --models facebook/esm2_t6_8M_UR50D \
-&& protlib-designer plm_scores.csv 10 --weighted-multi-objective True
+  --models facebook/esm2_t6_8M_UR50D
+```
+
+After that, you can run `protlib-designer` with the generated scores:
+
+```bash
+protlib-designer plm_scores.csv 10 --weighted-multi-objective True
 ```
 
 ### Computing Input Data with Inverse Folding Models
