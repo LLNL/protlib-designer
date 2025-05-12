@@ -131,8 +131,7 @@ protlib-plm-scorer \
 
 We provide built-in scoring functions to evaluate your input structures using inverse‐folding methods. Currently, we support:
 
-- [**ProteinMPNN**](https://www.science.org/doi/10.1126/science.add2187) (Dauparas _et al._, 2022)
-  A state-of-the-art inverse‐folding model for protein design.  
+- *Robust deep learning–based protein sequence design using ProteinMPNN* (Dauparas et al. 2022) - [Paper](https://www.science.org/doi/abs/10.1126/science.add2187) - We adopt some of the open source code from [ProteinMPNN](https://github.com/dauparas/ProteinMPNN)
 
 To enable inverse-folding scoring, install the extra dependencies:
 
