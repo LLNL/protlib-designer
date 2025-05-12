@@ -43,7 +43,7 @@ source .venv/bin/activate
 pip install -e .
 ```
 
-If you want a nice development environment, you can install the development dependencies:
+If you want a development environment, you can install the development dependencies:
 
 ```bash
 pip install -e .[dev]
