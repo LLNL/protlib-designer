@@ -3,6 +3,7 @@ import sys
 from pathlib import Path
 
 import pandas as pd
+from Bio.PDB import PDBParser, PPBuilder, MMCIFParser, PDBIO
 
 from protlib_designer import logger
 
@@ -36,7 +37,7 @@ aromatic_amino_acids = [
 ]
 
 
-def format_and_validate_parameters(
+def format_and_validate_protlib_designer_parameters(
     output_folder,
     data,
     min_mut,
@@ -94,7 +95,7 @@ def format_and_validate_parameters(
         schedule_param = [int(val) for val in schedule_param.split(",")]
     else:
         schedule_param = []
-    validate_schedule_param(schedule, schedule_param)
+    validate_schedule_parameters(schedule, schedule_param)
 
     if objective_constraints is not None:
         objective_constraints = objective_constraints.split(",")
@@ -153,7 +154,7 @@ def validate_data(df: pd.DataFrame):
         sys.exit(3)
 
 
-def validate_schedule_param(schedule: int, schedule_param: list):
+def validate_schedule_parameters(schedule: int, schedule_param: list):
     """Validate the scheduling parameters.
 
     Parameters
@@ -246,3 +247,77 @@ def write_config(config: dict, output_dir: Path):
 
     with open(filepath, "w") as fp:
         json.dump(config, fp, indent=4)
+
+
+def cif_to_pdb(cif_file: str, save: bool = True, output_pdb: str = None):
+    """Convert a CIF file to a PDB file
+
+    Parameters
+    ----------
+    cif_file : str
+        Path to the CIF file
+    save : bool, optional
+        Whether to save the PDB file, by default True
+    output_pdb : str, optional
+        Path to save the PDB file, by default None
+        If None, the PDB file will be saved with the same name as the CIF file
+        with a .pdb extension.
+    """
+    parser = MMCIFParser()
+    structure = parser.get_structure("structure", cif_file)
+    io = PDBIO()
+    io.set_structure(structure)
+    if save:
+        pdb_file = (
+            cif_file.replace(".cif", ".pdb") if output_pdb is None else output_pdb
+        )
+        io.save(pdb_file)
+    return io
+
+
+def extract_sequence_from_pdb(pdb_file: str, chain_id: str = "A") -> str:
+    """Extract the sequence from a PDB file.
+
+    Parameters
+    ----------
+    pdb_file : str
+        Path to the PDB file.
+    chain_id : str, optional
+        Chain ID to extract the sequence from, by default "A".
+
+    Returns
+    -------
+    str
+        The sequence of the specified chain.
+    """
+    parser = PDBParser(QUIET=True)
+    struct = parser.get_structure("X", pdb_file)
+    chain = struct[0][chain_id]
+
+    builder = PPBuilder()
+    # This returns a list of Polypeptide objects (fragments if there are breaks)
+    peptides = builder.build_peptides(chain)
+
+    # If you want the full chain sequence as one string, just concatenate:
+    return ''.join(str(pep.get_sequence()) for pep in peptides)
+
+
+def is_sequence_and_wildtype_dict_consistent(
+    sequence: str, wildtype_dict: dict
+) -> bool:
+    """
+    Check if the positions list is consistent with the sequence.
+    :param sequence: The amino acid sequence of the chain.
+    :param wildtype_dict: Dictionary containing positions and their corresponding wildtype amino acids, e.g. {1: 'A', 2: 'R', ...}.
+    :return: True if all positions are consistent with the sequence, False otherwise.
+    """
+    for position_index, wildtype_aa in wildtype_dict.items():
+        if position_index < 1 or position_index > len(sequence):
+            raise ValueError(
+                f"Position index {position_index} is out of bounds for the sequence of length {len(sequence)}."
+            )
+        if sequence[position_index - 1] != wildtype_aa:
+            raise ValueError(
+                f"Wildtype amino acid {wildtype_aa} at position {position_index} does not match the sequence at that position: {sequence[position_index - 1]}."
+            )
+    return True

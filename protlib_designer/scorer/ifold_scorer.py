@@ -7,14 +7,15 @@ from protlib_designer.scorer.scorer import (
     Scorer,
 )
 from protlib_designer import logger
+from protlib_designer.utils import amino_acids, is_sequence_and_wildtype_dict_consistent
 from protlib_designer.scorer.pmpnn.protein import Protein
 from protlib_designer.scorer.pmpnn.runner import ProteinMPNNRunner
 from protlib_designer.scorer.pmpnn.utils import (
     parse_PDB,
-    ALPHABET,
     assigned_fixed_chain,
     make_fixed_positions_dict,
 )
+
 
 import proteinmpnn.data.vanilla_model_weights as vmw
 
@@ -31,10 +32,14 @@ class IFOLDScorer(Scorer):
 
         if model_path is None:
             model_path = f'{Path(vmw.__file__).parent}/'
-            logger.info("ProteinMPNN model weights directory: %s", model_path)
+            logger.warning(
+                f"ProteinMPNN model weights directory not specified, using default: {model_path}"
+            )
         if model_name is None:
             model_name = "v_48_002"
-            logger.info("ProteinMPNN model name: %s", model_name)
+            logger.warning(
+                f"ProteinMPNN model name not specified, using default: {model_name}"
+            )
 
         self.model_name = model_name
         self.model_path = model_path
@@ -59,8 +64,8 @@ class IFOLDScorer(Scorer):
             Path to PDB structure file to read from.
         positions : list
             Positions on the sequence to be used to generate the score.
-            Positions must be in the following format: {WT}{CHAIN}{PDBINDEX}.
-            Note: PDBINDEX is 1-indexed, that is, the first position is 1. For example, the first positions in
+            Positions must be in the following format: {WT}{CHAIN}{STRINGINDEX}.
+            Note: STRINGINDEX is 1-indexed, that is, the first position is 1. For example, the first positions in
             the list of positions are [EH1, VH2, QH3, ...].
         chain_type : str
             Required parameter which specifies the chain type being analyzed.
@@ -82,14 +87,31 @@ class IFOLDScorer(Scorer):
             raise ValueError(
                 "All positions must have the same chain letter. Please provide positions with the same chain type."
             )
-        locs = [int(position[2:]) for position in positions]
+        else:
+            logger.info(f"IFOLD scorer will score positions on chain {chains[0]}")
+
+        # Get the positions indices.
+        position_indices = [int(position[2:]) for position in positions]
+
+        # Get wildtype dict: {position: wildtype}
         wildtype_dict = {int(position[2:]): position[0] for position in positions}
+
+        # Get the PDB dictionary.
         pdb_dict = parse_PDB(pdb_path)
+
+        # Check if sequence and positions are consistent.
+        if not is_sequence_and_wildtype_dict_consistent(
+            pdb_dict[0][f"seq_chain_{chains[0]}"], wildtype_dict
+        ):
+            raise ValueError(
+                "PDB and positions are not consistent. Please check the PDB file and positions."
+            )
+
         proteins = []
         for i, chain in enumerate(chains):
             fixed_chains = assigned_fixed_chain(pdb_dict[0], design_chain_list=[chain])
             fixed_positions = make_fixed_positions_dict(
-                pdb_dict[0], [[locs[i]]], [chain], specify_non_fixed=True
+                pdb_dict[0], [[position_indices[i]]], [chain], specify_non_fixed=True
             )
             protein = Protein.from_pdb(
                 pdb_path,
@@ -97,13 +119,13 @@ class IFOLDScorer(Scorer):
                 fixed_positions_dict=fixed_positions,
             )
             proteins.append(protein)
-        return proteins, chains, locs, wildtype_dict
+        return proteins, chains, position_indices, wildtype_dict
 
     def forward_pass(self, proteins: List[Protein]):
         log_prob_list = []
         for pos_index, protein in enumerate(proteins):
             logger.info(
-                f"Calculating conditional probabilities for {protein.name} at position {pos_index + 1} of {len(proteins)}"
+                f"IFOLD Scorer: Calculating conditional probabilities for {protein.name} at position {pos_index + 1} of {len(proteins)}"
             )
             log_probs, S, mask, design_mask, chain_order = self.model.get_probabilities(
                 protein, conditional_probs=True
@@ -115,7 +137,6 @@ class IFOLDScorer(Scorer):
         return log_prob_list
 
     def get_scores(self, pdb_path: str, positions: list[str]):
-        aas = list(ALPHABET)
         proteins, chains, locs, wildtype_dict = self.prepare_input(pdb_path, positions)
         logps = self.forward_pass(proteins)
         mutation2score = {}
@@ -123,12 +144,12 @@ class IFOLDScorer(Scorer):
             wildtype_aa = wildtype_dict[posn]
             seq_index = posn - 1  # need to do 0 based index
             position_logps = logps[bi][seq_index].numpy()
-            wt_aa_id = aas.index(wildtype_aa)
+            wt_aa_id = amino_acids.index(wildtype_aa)
             wt_logps = logps[bi][seq_index][wt_aa_id].numpy()
             position_scores = list(
                 score_function(position_logps, wt_logps, score_type=self.score_type)
             )
-            for i, amino_acid in enumerate(aas):
+            for i, amino_acid in enumerate(amino_acids):
                 mutation = f"{wildtype_aa}{chains[0]}{posn}{amino_acid}"
                 mutation2score[mutation] = position_scores[i]
 

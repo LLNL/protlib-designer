@@ -163,6 +163,20 @@ protlib-ifold-scorer \
   WB99 GB100 GB101 DB102 GB103 FB104 YB105 AB106 MB107 DB108 \
 ```
 
+## Putting it all together: Protlib Designer Pipeline
+
+We provide a command-line interface to run the entire pipeline, which includes computing the scores using Protein Language Models and Inverse Folding models, and then designing a diverse protein library using `protlib-designer`. This is done using the `protlib-pipeline` command.
+You can run the pipeline with the following command:
+
+```bash
+protlib-pipeline \
+  WB99 GB100 GB101 DB102 GB103 FB104 YB105 AB106 MB107 DB108 \
+  --pdb-path /Users/landajuelala1/Code/abag/protlib-designer/example_data/1n8z.pdb \
+  --plm-model-names facebook/esm2_t6_8M_UR50D
+```
+
+> **Note:** You can pass a placeholder position `*{chain}{{start-end}}` to the `protlib-pipeline` command to specify a range of positions to mutate. For example, `*B{99-108}` will have the same effect as `WB99 GB100 GB101 DB102 GB103 FB104 YB105 AB106 MB107 DB108`. You can also pass a placeholder of the form `*{chain}*` to mutate all positions in the chain. For example, `*B*` will mutate all positions in chain B.
+
 ## Contributing
 
 Please read [CONTRIBUTING.md](./CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.

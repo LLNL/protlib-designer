@@ -8,7 +8,10 @@ from protlib_designer.filter.no_filter import NoFilter
 from protlib_designer.generator.ilp_generator import ILPGenerator
 from protlib_designer.solution_manager import SolutionManager
 from protlib_designer.solver.generate_and_remove_solver import GenerateAndRemoveSolver
-from protlib_designer.utils import format_and_validate_parameters, write_config
+from protlib_designer.utils import (
+    format_and_validate_protlib_designer_parameters,
+    write_config,
+)
 
 CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"])
 
@@ -113,7 +116,7 @@ def run_protlib_designer(
     """
 
     # Format the input and validate the parameters.
-    config, _ = format_and_validate_parameters(
+    config, _ = format_and_validate_protlib_designer_parameters(
         output_folder,
         data,
         min_mut,
