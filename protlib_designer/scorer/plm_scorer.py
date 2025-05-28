@@ -4,7 +4,7 @@ from typing import List
 
 from transformers import AutoModelForMaskedLM, AutoTokenizer
 
-from protlib_designer.utils import amino_acids
+from protlib_designer.utils import amino_acids, is_sequence_and_wildtype_dict_consistent
 from protlib_designer.scorer.scorer import (
     score_function,
     from_user_input_to_scorer_input,
@@ -60,7 +60,7 @@ class PLMScorer(Scorer):
             {'H': {'H1': 1, 'H5': 2, 'H6': 3}, 'L': {'L1': 1, 'L2': 2, 'L3': 3}}
         """
 
-        if model_name is None:
+        if model_name is None and model_path is None:
             raise ValueError("Please provide a model name or a model path.")
 
         self.model_name = model_name
@@ -120,8 +120,8 @@ class PLMScorer(Scorer):
             Sequence used to generated the scores. This a string of amino acids.
         positions : list
             Positions on the sequence to be used to generate the score.
-            Positions must be in the following format: {WT}{CHAIN}{PDBINDEX}.
-            Note: PDBINDEX is 1-indexed, that is, the first position is 1. For example, the first positions in
+            Positions must be in the following format: {WT}{CHAIN}{STRINGINDEX}.
+            Note: STRINGINDEX is 1-indexed, that is, the first position is 1. For example, the first positions in
             the list of positions are [EH1, VH2, QH3, ...].
         chain_type : str
             Optional parameter to specify the chain type. For example, heavy or light chain for antibodies.
@@ -153,6 +153,13 @@ class PLMScorer(Scorer):
 
         # Get wildtype dict: {position: wildtype}
         wildtype_dict = {int(position[2:]): position[0] for position in positions}
+
+        # Check if sequence and positions are consistent.
+        if not is_sequence_and_wildtype_dict_consistent(sequence, wildtype_dict):
+            raise ValueError(
+                "The sequence and the wildtype dictionary are not consistent. "
+                "Please check the sequence and the positions provided."
+            )
 
         # Create batch to generate score in one pass.
         batch = []
@@ -213,8 +220,8 @@ class PLMScorer(Scorer):
             Sequence used to generated the scores. This a string of amino acids.
         positions : list
             Positions on the sequence to be used to generate the score.
-            Positions must be in the following format: {WT}{CHAIN}{PDBINDEX}.
-            Note: PDBINDEX is 1-indexed, that is, the first position is 1. For example, the first positions in
+            Positions must be in the following format: {WT}{CHAIN}{STRINGINDEX}.
+            Note: STRINGINDEX is 1-indexed, that is, the first position is 1. For example, the first positions in
             the list of positions are [EH1, VH2, QH3, ...].
         chain_type : str
             Type of antibody chain (heavy or light). This is used to determine the chain token to pass to the LLM model.
