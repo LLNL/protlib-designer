@@ -76,10 +76,7 @@ def format_and_validate_pipeline_parameters(
             f"No sequence provided. Extracting sequence: {sequence} from PDB file {pdb_path} and chain {pdb_chain}."
         )
 
-    if (
-        len(positions) == 1
-        and positions[0].startswith("*")
-    ):
+    if len(positions) == 1 and positions[0].startswith("*"):
         logger.warning(
             f"A placeholder position was provided {positions}, generating positions for the entire sequence."
         )
