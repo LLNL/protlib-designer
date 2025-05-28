@@ -3,7 +3,6 @@ import sys
 from pathlib import Path
 
 import pandas as pd
-from Bio.PDB import PDBParser, PPBuilder, MMCIFParser, PDBIO
 
 from protlib_designer import logger
 
@@ -263,6 +262,9 @@ def cif_to_pdb(cif_file: str, save: bool = True, output_pdb: str = None):
         If None, the PDB file will be saved with the same name as the CIF file
         with a .pdb extension.
     """
+
+    from Bio.PDB import MMCIFParser, PDBIO
+
     parser = MMCIFParser()
     structure = parser.get_structure("structure", cif_file)
     io = PDBIO()
@@ -290,6 +292,9 @@ def extract_sequence_from_pdb(pdb_file: str, chain_id: str = "A") -> str:
     str
         The sequence of the specified chain.
     """
+
+    from Bio.PDB import PDBParser, PPBuilder
+
     parser = PDBParser(QUIET=True)
     struct = parser.get_structure("X", pdb_file)
     chain = struct[0][chain_id]
