@@ -171,7 +171,7 @@ You can run the pipeline with the following command:
 ```bash
 protlib-pipeline \
   WB99 GB100 GB101 DB102 GB103 FB104 YB105 AB106 MB107 DB108 \
-  --pdb-path example_data/1n8z.pdb \
+  --pdb-path ./example_data/1n8z.pdb \
   --plm-model-names facebook/esm2_t6_8M_UR50D
 ```
 
